@@ -574,7 +574,7 @@ Jedes Element der verketteten Liste enthält folgende Informationen:
   Die Startfrequenz des Segments (zum Beispiel $x_{\min} + i \cdot W$).
 
 - **seg_end:**  
-  Die Endfrequenz des Segments (also $\text{seg\_start} + W$).
+  Die Endfrequenz des Segments (also ${seg\_start} + W$).
 
 - **usage_percent:**  
   Der Prozentsatz der idealen Fläche, der durch die tatsächliche Fläche unter der Spektrumskurve abgedeckt wird. Dies gibt an, wie "voll" das Segment im Vergleich zum Maximum ist.
