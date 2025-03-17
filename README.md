@@ -199,7 +199,7 @@ Die vorgestellte Methode analysiert ein Audiosignal, transformiert es in den Fre
 
 ## 3. Unterteilung des Frequenzbereichs in \( n \) Segmente
 
-Der betrachtete Frequenzbereich, beispielsweise von \( x_{\min} = 0 \) Hz bis \( x_{\max} = 2000 \) Hz, wird in \( n \) gleich große Bereiche unterteilt. Die Breite einer Box \( W \) berechnet sich durch:
+Der betrachtete Frequenzbereich, beispielsweise von $$ \( x_{\min} = 0 \) Hz bis \( x_{\max} = 2000 \) Hz $$ , wird in \( n \) gleich große Bereiche unterteilt. Die Breite einer Box \( W \) berechnet sich durch:
 
 $$
 W = \frac{x_{\max} - x_{\min}}{n}
