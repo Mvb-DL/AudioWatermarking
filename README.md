@@ -1,3 +1,48 @@
+# Audio Fingerprinting zur Plagiaterkennung
+
+## Ziel des Projekts
+
+Das Projekt soll jedem Audiofile einen individuellen Fingerabdruck zuweisen, sodass der Nutzer definieren kann, wie stark ein anderes Audiofile von seinem Original abweichen darf, bevor es als Plagiat gilt. Dies ermöglicht es, effizient Fingerprints zu speichern und miteinander zu vergleichen, um Open-Source-Plagiate von Werken aufzudecken – ein Werkzeug, das Künstler in Zukunft vor unautorisierten Kopien schützen soll.
+
+---
+
+## Überblick und Methodik
+
+Jedes Audiosignal wird zunächst per Fourier-Transformation in den Frequenzbereich überführt und anschließend in gleich große Segmente unterteilt. In jedem Segment wird die Energie (das Integral der Amplituden) berechnet. Diese segmentierten Werte werden in Form von Fingerprints gespeichert – umgesetzt durch verkettete Listen, bei denen jedes Segment wichtige Parameter wie Start- und Endfrequenz, den prozentualen Anteil der idealen Fläche (*usage_percent*) und die tatsächliche Integralfläche enthält.
+
+### Innovative Aspekte und Vergleichsmethoden
+
+Ein zentraler Aspekt der Methode ist die flexible Skalierung:
+
+- **Lokale Skalierung:**  
+  Jedes Audiofile wird anhand des eigenen maximalen Amplitudenwertes normalisiert, was robust gegenüber internen Gain-Änderungen ist.
+
+- **Globale Skalierung:**  
+  Ein einheitlicher, globaler Maximalwert ermöglicht den direkten Vergleich von Fingerprints verschiedener Audiofiles.
+
+Diese Ansätze erlauben es, präzise Unterschiede im spektralen Flächenverbrauch und in dynamischen Eigenschaften (wie RMS, Crest-Faktor und Delay-Effekten) zu ermitteln.
+
+---
+
+## Ausblick
+
+Die nächsten Schritte umfassen:
+- Verbesserung der Dokumentation
+- Umfangreiche Tests
+- Entwicklung einer praktischen Umsetzung (eventuell sogar mit einem eigenen Filetype)
+
+Ziel ist es, Künstlern ein effektives Werkzeug an die Hand zu geben, um Plagiate ihrer Werke frühzeitig zu erkennen und so ihre Originalität zu schützen.
+
+---
+
+## Disclaimer zum Urheberrecht
+
+Das Urheberrecht an diesem Projekt liegt bei **Mario von Bassen**.  
+Der Autor ist Informatiker und kein Mathematiker, weshalb die mathematischen Formulierungen mit externer Unterstützung entstanden sind.  
+Die Idee des Fingerprintings ist eigenständig entwickelt worden, auch wenn nach Rechercheunternehmen wie Shazam verwandte Techniken verwenden – diese Umsetzung weicht in einigen Details ab.  
+Feedback und Anregungen sind gerne unter [mariovonbassen@gmail.com](mailto:mariovonbassen@gmail.com) willkommen.
+
+
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
