@@ -971,31 +971,31 @@ print(f"Original Crest-Factor: {dynamic_info['crest_orig']:.2f}, Neuer Crest-Fac
 print(f"Delay-Indikator (Anzahl signifikanter Peaks): {dynamic_info['delay_indicator']}")
 print(f"Vermuteter dynamischer Effekt: {dynamic_info['predicted_dynamic_effect']}")
 
-```
-
-    
-    Gewichtete Durchschnittliche Differenz: 0.24%
-    Globaler Durchschnitt (ungewichtetes Mittel): 0.10%
-    
 
 
     
-    ![png](frequenz_test_files/output2.png)
+Gewichtete Durchschnittliche Differenz: 0.24%
+Globaler Durchschnitt (ungewichtetes Mittel): 0.10%
     
 
 
     
-    Globaler Audioeffekt basierend auf Nutzungsanteilen der Spektren:
-    Gewichtete Durchschnittliche Differenz: 4.05%
-    Vermuteter globaler Effekt: Boost im Bassbereich
+![png](frequenz_test_files/output2.png)
+    
 
-    80%-Frequenzbereich: 91 Hz bis 758 Hz
 
-    Analyse der dynamischen Kennzahlen:
-    Original RMS: 0.0908, Neues RMS: 0.1658, Änderung: 82.55%
-    Original Crest-Factor: 4.69, Neuer Crest-Factor: 3.75, Änderung: -20.17%
-    Delay-Indikator (Anzahl signifikanter Peaks): 8
-    Vermuteter dynamischer Effekt: Kompression (verringerter Dynamikumfang)
+    
+Globaler Audioeffekt basierend auf Nutzungsanteilen der Spektren:
+Gewichtete Durchschnittliche Differenz: 4.05%
+Vermuteter globaler Effekt: Boost im Bassbereich
+
+80%-Frequenzbereich: 91 Hz bis 758 Hz
+
+Analyse der dynamischen Kennzahlen:
+Original RMS: 0.0908, Neues RMS: 0.1658, Änderung: 82.55%
+Original Crest-Factor: 4.69, Neuer Crest-Factor: 3.75, Änderung: -20.17%
+Delay-Indikator (Anzahl signifikanter Peaks): 8
+Vermuteter dynamischer Effekt: Kompression (verringerter Dynamikumfang)
     
 
 # Audiofile Analyse
