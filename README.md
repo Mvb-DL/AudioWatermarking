@@ -85,9 +85,9 @@ plt.show()
 
 # Frequenzanalyse und Energieberechnung eines Audiosignals
 
-Das dargestellte Ergebnis ist ein Frequenzspektrum, das zeigt, wie sich die Energie eines Audiosignals über verschiedene Frequenzen verteilt. Auf der horizontalen Achse sind die Frequenzen in Hertz (Hz) abgetragen, während die vertikale Achse die Amplituden der entsprechenden Frequenzanteile anzeigt.
+Das dargestellte Ergebnis ist ein Frequenzspektrum, das zeigt, wie sich die Energie eines Audiosignals über verschiedene Frequenzen verteilt. Auf der horizontalen Achse sind die Frequenzen in Hertz (Hz) eingetragen, während die vertikale Achse die Amplituden der entsprechenden Frequenzanteile anzeigt.
 
-## Fourier-Transformation
+## 1. Fourier-Transformation
 
 Das ursprüngliche Audiosignal, das in der Zeitdomäne vorliegt, wird mittels der **diskreten Fourier-Transformation (DFT)** in den Frequenzbereich überführt. Dabei wird das Signal als Summe von Sinus- und Kosinuswellen unterschiedlicher Frequenzen dargestellt. Die mathematische Formel lautet:
 
@@ -100,7 +100,7 @@ wobei:
 - \( N \) die Gesamtanzahl der Signalproben darstellt,
 - \( X[k] \) der komplexe Fourier-Koeffizient für den Frequenzindex \( k \) ist.
 
-Um die Stärke der einzelnen Frequenzanteile zu ermitteln, wird der Betrag (die Norm) der komplexen Fourier-Koeffizienten berechnet:
+Um die Stärke der einzelnen Frequenzanteile zu ermitteln, wird der Betrag der komplexen Fourier-Koeffizienten berechnet:
 
 $$
 |X[k]| = \sqrt{\Re(X[k])^2 + \Im(X[k])^2}
@@ -108,7 +108,7 @@ $$
 
 Da reale Signale ein symmetrisches Spektrum aufweisen, werden üblicherweise nur die positiven Frequenzen betrachtet.
 
-## Energieberechnung
+## 2. Energieberechnung (Amplitudenspektrum)
 
 Die Gesamtenergie eines Signals kann über die quadrierten Amplituden berechnet werden. Dank des **Parsevalschen Theorems** gilt:
 
@@ -127,7 +127,7 @@ $$
 - **Transformation:** Das zeitabhängige Signal wird in den Frequenzraum transformiert, indem es als Summe von Schwingungen unterschiedlicher Frequenzen dargestellt wird.
 - **Spektrumanalyse:** Die Amplituden der einzelnen Frequenzen werden durch die Berechnung der Beträge der Fourier-Koeffizienten bestimmt.
 - **Energieberechnung:** Durch Quadrieren und Aufsummieren der Amplituden (unter Beachtung der Symmetrie des Spektrums) erhält man ein Maß für die Gesamtenergie des Signals.
-- **Visualisierung:** Das Frequenzspektrum zeigt grafisch die Verteilung der Energie über verschiedene Frequenzbereiche, sodass dominierende Frequenzen – beispielsweise im interessierenden Bereich von 0 bis 2000 Hz – sofort erkennbar sind.
+- **Visualisierung:** Das Frequenzspektrum zeigt grafisch die Verteilung der Energie über verschiedene Frequenzbereiche, sodass dominierende Frequenzen – beispielsweise im interessierenden Bereich von 0 bis 2000 Hz (Bereich für Musikstücke) – sofort erkennbar sind.
 
 
 # Segmentierung des Audiofiles
@@ -139,9 +139,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import librosa
 
-audio_file = 'test.mp3'  # Ersetze diesen Pfad durch deinen tatsächlichen Dateinamen
-
-# Lade das Audiofile (sr=None behält die originale Abtastrate)
+audio_file = 'test.mp3' 
 y, sr = librosa.load(audio_file, sr=None)
 
 # Berechne die FFT des Audiosignals
@@ -195,29 +193,6 @@ plt.show()
 # Frequenzspektrum in \( n \) Segmenten unterteilen
 
 Die vorgestellte Methode analysiert ein Audiosignal, transformiert es in den Frequenzbereich und teilt anschließend den angezeigten Frequenzbereich in \( n \) gleich große Segmente (Boxen) ein. Dabei wird das Frequenzspektrum visualisiert und zugleich mathematisch in Teilabschnitte zerlegt.
-
-## 1. Fourier-Transformation
-
-Zunächst wird das zeitabhängige Audiosignal \( x[n] \) mittels der diskreten Fourier-Transformation (DFT) in den Frequenzbereich überführt:
-
-$$
-X[k] = \sum_{n=0}^{N-1} x[n] \cdot e^{-i\, 2\pi \frac{k \cdot n}{N}}
-$$
-
-wobei  
-- \( x[n] \) das zeitdiskrete Signal ist,  
-- \( N \) die Anzahl der Signalproben darstellt,  
-- \( X[k] \) der komplexe Fourier-Koeffizient für den Frequenzindex \( k \) ist.
-
-## 2. Berechnung des Amplitudenspektrums
-
-Um die Stärke der einzelnen Frequenzanteile zu bestimmen, wird der Betrag der Fourier-Koeffizienten berechnet:
-
-$$
-|X[k]| = \sqrt{\Re(X[k])^2 + \Im(X[k])^2}
-$$
-
-Da reale Signale ein symmetrisches Spektrum aufweisen, werden typischerweise nur die positiven Frequenzen betrachtet.
 
 ## 3. Unterteilung des Frequenzbereichs in \( n \) Segmente
 
@@ -276,7 +251,7 @@ def compute_max_segments(audio_file, x_min, x_max):
 
 - **Transformation:** Das zeitabhängige Signal wird mittels DFT in den Frequenzraum transformiert.
 - **Spektrumanalyse:** Durch Berechnung der Beträge der Fourier-Koeffizienten erhält man das Amplitudenspektrum.
-- **Segmentierung:** Der Frequenzbereich (z.B. von 0 bis 2000 Hz) wird in n gleich große Segmente unterteilt
+- **Segmentierung:** Der Frequenzbereich (z.B. von 0 bis 2000 Hz) wird wieder (wie siehe oben) in n gleich große Segmente unterteilt
 
 
 
@@ -294,7 +269,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import librosa
 
-audio_file = 'test.mp3'  # Ersetze diesen Pfad durch deinen tatsächlichen Dateinamen
+audio_file = 'test.mp3' 
 
 y, sr = librosa.load(audio_file, sr=None)
 
