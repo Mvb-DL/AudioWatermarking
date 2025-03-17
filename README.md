@@ -232,13 +232,14 @@ Dabei ist:
 - $N$ die Anzahl der Signalproben.
 
 **Berechnung der maximal möglichen Segmente:**  
-Für einen definierten Frequenzbereich von $x_{\min}$ bis $x_{\max}$ wird die maximal mögliche Anzahl an Segmenten berechnet, indem der Gesamtfrequenzbereich durch die Frequenzauflösung geteilt wird:
+Für einen definierten Frequenzbereich von $x_{\mathrm{min}}$ bis $x_{\mathrm{max}}$ wird die maximal mögliche Anzahl an Segmenten berechnet, indem der Gesamtfrequenzbereich durch die Frequenzauflösung geteilt wird:
 
 $$
-\mathrm{max\_segments\_possible} = \frac{x_{\max} - x_{\min}}{\Delta f}
+\mathrm{max\_segments\_possible} = \frac{x_{\mathrm{max}} - x_{\mathrm{min}}}{\Delta f}
 $$
 
 Der so berechnete Wert wird anschließend in einen ganzzahligen Wert umgewandelt, um die Anzahl der sinnvollen Segmente zu erhalten.
+
 
 
 ## Quellcode der Funktion
@@ -256,11 +257,6 @@ def compute_max_segments(audio_file, x_min, x_max):
 - **Transformation:** Das zeitabhängige Signal wird mittels DFT in den Frequenzraum transformiert.
 - **Spektrumanalyse:** Durch Berechnung der Beträge der Fourier-Koeffizienten erhält man das Amplitudenspektrum.
 - **Segmentierung:** Der Frequenzbereich (z.B. von 0 bis 2000 Hz) wird wieder (wie siehe oben) in n gleich große Segmente unterteilt
-
-
-
-
-
 
 
 
