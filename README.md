@@ -2,7 +2,7 @@
 
 ## Ziel des Projekts
 
-Das Projekt soll jedem Audiofile einen individuellen Fingerabdruck zuweisen, sodass der Nutzer definieren kann, wie stark ein anderes Audiofile von seinem Original abweichen darf, bevor es als Plagiat gilt. Dies ermöglicht es, effizient Fingerprints zu speichern und miteinander zu vergleichen. Künstler soll es in Zukunft mittels Open-Source möglich sein ihre Werke zu schützen und Kopien aufzudecken. Mit der folgenden Methode können die Künstler mathematisch nachweisen, dass ihr Werk das Original ist.
+Das Projekt dient dazu, dass ein Knstler sein Audiowerk mit einem individuellen Fingeabdruck versehen kann. Zu dem kann der Nutzer definieren, wie stark ein anderes Audiofile von seinem Original abweichen darf, bevor es als Plagiat gilt. Die Methode ermöglicht es, effizient Fingerprints zu speichern und miteinander zu vergleichen. Künstlern soll es in Zukunft mittels Open-Source möglich sein, ihre Werke zu schützen und Kopien aufzudecken.
 
 ---
 
@@ -10,7 +10,14 @@ Das Projekt soll jedem Audiofile einen individuellen Fingerabdruck zuweisen, sod
 
 Jedes Audiosignal wird zunächst per Fourier-Transformation in den Frequenzbereich überführt und anschließend in gleich große Segmente unterteilt. In jedem Segment wird die Energie (das Integral der Amplituden) berechnet. Diese segmentierten Werte werden in Form von Fingerprints gespeichert – umgesetzt durch verkettete Listen, bei denen jedes Segment wichtige Parameter wie Start- und Endfrequenz, den prozentualen Anteil der idealen Fläche (*usage_percent*) und die tatsächliche Integralfläche enthält.
 
-### Innovative Aspekte und Vergleichsmethoden
+### Konkrete Schritte des Audio Fingerprintings
+
+1. Das Audiofile wird in ein Frequenzspektrum von Amplitude und Frequenz übertragen.
+2. Das Frequenzspektrum wird in n-viele Segmente aufgeteilt.
+3. Es wird die Gesamtsegmentfläche mit der direkten Energie-Integralfläche subtrahiert.
+4. Die einzelnen subtrahierten Segmentflächen werden in einer Datenstruktur in Form einer verketteten Liste gespeichert.
+5. Diese verkettete Liste wird in einen dreidimensionalen Raum übertragen (Der finale Fingerprint).
+6. Abschließend kann die verkettete Liste mit anderen verketteten Listen verglichen und deren Differenz erfasst werden. Charakteristische Abweichungen können Mutmaßungen darüber geben, was zu der Abweichung geführt hat (EQ, Gain, Compressing ...)
 
 Ein zentraler Aspekt der Methode ist die flexible Skalierung:
 
@@ -41,6 +48,8 @@ Das Urheberrecht an diesem Projekt liegt bei **Mario von Bassen**.
 Der Autor ist Informatiker und kein Mathematiker, weshalb die mathematischen Formulierungen mit externer Unterstützung entstanden sind.  
 Die Idee des Fingerprintings ist eigenständig entwickelt worden, auch wenn nach Recherche Unternehmen wie Shazam verwandte Techniken verwenden – diese Umsetzung weicht in einigen Details ab.  
 Feedback und Anregungen sind gerne an [mariovonbassen@gmail.com](mailto:mariovonbassen@gmail.com) zu richten
+
+
 
 
 ```python
@@ -80,11 +89,14 @@ plt.show()
 
 ```
 
+![png](frequenz_test_files/output.png)
+
+
 # Frequenzanalyse und Energieberechnung eines Audiosignals
 
-Das dargestellte Ergebnis ist ein Frequenzspektrum, das zeigt, wie sich die Energie eines Audiosignals über verschiedene Frequenzen verteilt. Auf der horizontalen Achse sind die Frequenzen in Hertz (Hz) abgetragen, während die vertikale Achse die Amplituden der entsprechenden Frequenzanteile anzeigt.
+Das dargestellte Ergebnis ist ein Frequenzspektrum, das zeigt, wie sich die Energie eines Audiosignals über verschiedene Frequenzen verteilt. Auf der horizontalen Achse sind die Frequenzen in Hertz (Hz) eingetragen, während die vertikale Achse die Amplituden der entsprechenden Frequenzanteile anzeigt.
 
-## Fourier-Transformation
+## 1. Fourier-Transformation
 
 Das ursprüngliche Audiosignal, das in der Zeitdomäne vorliegt, wird mittels der **diskreten Fourier-Transformation (DFT)** in den Frequenzbereich überführt. Dabei wird das Signal als Summe von Sinus- und Kosinuswellen unterschiedlicher Frequenzen dargestellt. Die mathematische Formel lautet:
 
@@ -97,7 +109,7 @@ wobei:
 - \( N \) die Gesamtanzahl der Signalproben darstellt,
 - \( X[k] \) der komplexe Fourier-Koeffizient für den Frequenzindex \( k \) ist.
 
-Um die Stärke der einzelnen Frequenzanteile zu ermitteln, wird der Betrag (die Norm) der komplexen Fourier-Koeffizienten berechnet:
+Um die Stärke der einzelnen Frequenzanteile zu ermitteln, wird der Betrag der komplexen Fourier-Koeffizienten berechnet:
 
 $$
 |X[k]| = \sqrt{\Re(X[k])^2 + \Im(X[k])^2}
@@ -105,7 +117,7 @@ $$
 
 Da reale Signale ein symmetrisches Spektrum aufweisen, werden üblicherweise nur die positiven Frequenzen betrachtet.
 
-## Energieberechnung
+## 2. Energieberechnung (Amplitudenspektrum)
 
 Die Gesamtenergie eines Signals kann über die quadrierten Amplituden berechnet werden. Dank des **Parsevalschen Theorems** gilt:
 
@@ -124,8 +136,11 @@ $$
 - **Transformation:** Das zeitabhängige Signal wird in den Frequenzraum transformiert, indem es als Summe von Schwingungen unterschiedlicher Frequenzen dargestellt wird.
 - **Spektrumanalyse:** Die Amplituden der einzelnen Frequenzen werden durch die Berechnung der Beträge der Fourier-Koeffizienten bestimmt.
 - **Energieberechnung:** Durch Quadrieren und Aufsummieren der Amplituden (unter Beachtung der Symmetrie des Spektrums) erhält man ein Maß für die Gesamtenergie des Signals.
-- **Visualisierung:** Das Frequenzspektrum zeigt grafisch die Verteilung der Energie über verschiedene Frequenzbereiche, sodass dominierende Frequenzen – beispielsweise im interessierenden Bereich von 0 bis 2000 Hz – sofort erkennbar sind.
+- **Visualisierung:** Das Frequenzspektrum zeigt grafisch die Verteilung der Energie über verschiedene Frequenzbereiche, sodass dominierende Frequenzen – beispielsweise im interessierenden Bereich von 0 bis 2000 Hz (Bereich für Musikstücke) – sofort erkennbar sind.
 
+## Quellen 
+
+https://de.wikipedia.org/wiki/Satz_von_Parseval, https://de.wikipedia.org/wiki/Fourier-Transformation
 
 # Segmentierung des Audiofiles
 
@@ -136,9 +151,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import librosa
 
-audio_file = 'test.mp3'  # Ersetze diesen Pfad durch deinen tatsächlichen Dateinamen
-
-# Lade das Audiofile (sr=None behält die originale Abtastrate)
+audio_file = 'test.mp3' 
 y, sr = librosa.load(audio_file, sr=None)
 
 # Berechne die FFT des Audiosignals
@@ -193,38 +206,15 @@ plt.show()
 
 Die vorgestellte Methode analysiert ein Audiosignal, transformiert es in den Frequenzbereich und teilt anschließend den angezeigten Frequenzbereich in \( n \) gleich große Segmente (Boxen) ein. Dabei wird das Frequenzspektrum visualisiert und zugleich mathematisch in Teilabschnitte zerlegt.
 
-## 1. Fourier-Transformation
-
-Zunächst wird das zeitabhängige Audiosignal \( x[n] \) mittels der diskreten Fourier-Transformation (DFT) in den Frequenzbereich überführt:
-
-$$
-X[k] = \sum_{n=0}^{N-1} x[n] \cdot e^{-i\, 2\pi \frac{k \cdot n}{N}}
-$$
-
-wobei  
-- \( x[n] \) das zeitdiskrete Signal ist,  
-- \( N \) die Anzahl der Signalproben darstellt,  
-- \( X[k] \) der komplexe Fourier-Koeffizient für den Frequenzindex \( k \) ist.
-
-## 2. Berechnung des Amplitudenspektrums
-
-Um die Stärke der einzelnen Frequenzanteile zu bestimmen, wird der Betrag der Fourier-Koeffizienten berechnet:
-
-$$
-|X[k]| = \sqrt{\Re(X[k])^2 + \Im(X[k])^2}
-$$
-
-Da reale Signale ein symmetrisches Spektrum aufweisen, werden typischerweise nur die positiven Frequenzen betrachtet.
-
 ## 3. Unterteilung des Frequenzbereichs in \( n \) Segmente
 
-Der betrachtete Frequenzbereich, beispielsweise von \( x_{\min} = 0 \) Hz bis \( x_{\max} = 2000 \) Hz, wird in \( n \) gleich große Bereiche unterteilt. Die Breite einer Box \( W \) berechnet sich durch:
+Der betrachtete Frequenzbereich, beispielsweise von $$x_{\min} = 0 \text{ Hz bis } x_{\max} = 2000$$, wird in \( n \) gleich große Bereiche unterteilt. Die Breite einer Box \( W \) berechnet sich durch:
 
 $$
 W = \frac{x_{\max} - x_{\min}}{n}
 $$
 
-Für jedes Segment \( i \) (wobei \( i = 0, 1, 2, \dots, n-1 \)) gilt dann:
+Für jedes Segment $i$ (wobei $i = 0, 1, 2, \dots, n-1$) gilt dann:
 
 $$
 x_{\text{start}, i} = x_{\min} + i \cdot W
@@ -239,25 +229,29 @@ Die Funktion `compute_max_segments` berechnet die maximal mögliche Anzahl an Se
 
 ## Mathematischer Hintergrund
 
-1. **Frequenzauflösung:**  
-   Nach dem Laden des Audiosignals wird die Frequenzauflösung \(\Delta f\) ermittelt, die angibt, wie groß der Frequenzabstand zwischen zwei benachbarten Punkten im Spektrum ist. Sie berechnet sich wie folgt:
-   
-   $$
-   \Delta f = \frac{sr}{N}
-   $$
-   
-   Hierbei ist:
-   - \( sr \) die Abtastrate des Signals,
-   - \( N \) die Anzahl der Signalproben.
+**Frequenzauflösung:**  
+Nach dem Laden des Audiosignals wird die Frequenzauflösung, $\Delta f$, ermittelt, die angibt, wie groß der Frequenzabstand zwischen zwei benachbarten Punkten im Spektrum ist. Sie berechnet sich wie folgt:
 
-2. **Berechnung der maximal möglichen Segmente:**  
-   Für einen definierten Frequenzbereich von \( x_{\min} \) bis \( x_{\max} \) wird die maximal mögliche Anzahl an Segmenten berechnet, indem der Gesamtfrequenzbereich durch die Frequenzauflösung geteilt wird:
-   
-   $$
-   \text{max\_segments\_possible} = \frac{x_{\max} - x_{\min}}{\Delta f}
-   $$
-   
-   Der Wert wird anschließend in einen ganzzahligen Wert umgewandelt, um die Anzahl der sinnvollen Segmente zu erhalten.
+$$
+\Delta f = \frac{sr}{N}
+$$
+
+Dabei ist:
+- $sr$ die Abtastrate des Signals,
+- $N$ die Anzahl der Signalproben.
+
+**Berechnung der maximal möglichen Segmente:**  
+Für einen definierten Frequenzbereich von $x_{\text{min}}$ bis $x_{\text{max}}$ wird die maximal mögliche Anzahl an Segmenten berechnet, indem der Gesamtfrequenzbereich durch die Frequenzauflösung geteilt wird:
+
+
+$$
+max_{segments_{possible}} = \frac{x_{max} - x_{min}}{\Delta f}
+$$
+
+
+Der so berechnete Wert wird anschließend in einen ganzzahligen Wert umgewandelt, um die Anzahl der sinnvollen Segmente zu erhalten.
+
+
 
 ## Quellcode der Funktion
 
@@ -273,12 +267,7 @@ def compute_max_segments(audio_file, x_min, x_max):
 
 - **Transformation:** Das zeitabhängige Signal wird mittels DFT in den Frequenzraum transformiert.
 - **Spektrumanalyse:** Durch Berechnung der Beträge der Fourier-Koeffizienten erhält man das Amplitudenspektrum.
-- **Segmentierung:** Der Frequenzbereich (z.B. von 0 bis 2000 Hz) wird in n gleich große Segmente unterteilt
-
-
-
-
-
+- **Segmentierung:** Der Frequenzbereich (z.B. von 0 bis 2000 Hz) wird wieder (wie siehe oben) in n gleich große Segmente unterteilt
 
 
 
@@ -291,7 +280,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import librosa
 
-audio_file = 'test.mp3'  # Ersetze diesen Pfad durch deinen tatsächlichen Dateinamen
+audio_file = 'test.mp3' 
 
 y, sr = librosa.load(audio_file, sr=None)
 
@@ -365,45 +354,50 @@ plt.show()
 
 # Beschreibung der Frequenzspektrumsegmentierung und Flächenberechnung
 
-Der vorgestellte Vorgang unterteilt das Frequenzspektrum eines Audiosignals in \( n \) gleich große Segmente und vergleicht für jedes Segment die ideale Rechtecksfläche mit der tatsächlich integrierten Fläche unter der Spektrumskurve. Dabei wird mittels der Trapezregel die Fläche der Kurve im jeweiligen Frequenzintervall numerisch bestimmt und von der idealen Fläche subtrahiert.
+Der vorgestellte Vorgang unterteilt das Frequenzspektrum eines Audiosignals in $n$ gleich große Segmente und vergleicht für jedes Segment die ideale Rechtecksfläche mit der tatsächlich integrierten Fläche unter der Spektrumskurve. Dabei wird mittels der Trapezregel die Fläche der Kurve im jeweiligen Frequenzintervall numerisch bestimmt und von der idealen Fläche subtrahiert.
 
 ## 4. Flächenberechnung im Segment
 
-### Ideale Rechtecksfläche
-
-Für jedes Segment wird zunächst eine ideale Rechtecksfläche als Referenz festgelegt. Diese Fläche wird durch die maximale Amplitude \( A_{\text{max}} \) im betrachteten Frequenzbereich multipliziert mit der Segmentbreite \( W \) definiert:
+## Ideale Rechtecksfläche
+Für jedes Segment wird zunächst eine ideale Rechtecksfläche als Referenz festgelegt. Diese Fläche wird definiert als das Produkt der Segmentbreite $W$ und der maximalen Amplitude $A_{max}$ im betrachteten Frequenzbereich:
 
 $$
-\text{Fläche}_{\text{Rechteck}} = W \times A_{\text{max}}
+Fläche_{Rechteck} = W \cdot A_{max}
 $$
 
-### Integrierte Spektrumfläche
-
+## Integrierte Spektrumfläche
 Die tatsächliche Fläche unter der Spektrumskurve im jeweiligen Segment wird durch numerische Integration (hier mittels der Trapezregel) bestimmt:
 
 $$
-\text{Fläche}_{\text{Spektrum}} = \int_{\text{Start}_i}^{\text{Ende}_i} |X(f)| \, df
+Fläche_{Spektrum} = \int_{Start_i}^{Ende_i} \left| X(f) \right| \, df
 $$
 
-wobei \( |X(f)| \) die Amplitude des Spektrums in Abhängigkeit von der Frequenz \( f \) ist.
+Hierbei ist $\left| X(f) \right|$ die Amplitude des Spektrums in Abhängigkeit von der Frequenz $f$.
 
 ## 5. Differenzbildung
 
 Die Differenz zwischen der idealen Rechtecksfläche und der integrierten Spektrumfläche gibt an, wie groß der Flächenunterschied im jeweiligen Segment ist. Diese Differenz wird berechnet als:
 
 $$
-\Delta A_i = \text{Fläche}_{\text{Rechteck}} - \text{Fläche}_{\text{Spektrum}}
+\Delta A_i = Fläche_{Rechteck} - Fläche_{Spektrum}
 $$
 
-Der Wert \( \Delta A_i \) wird anschließend für jedes Segment im Plot als Text dargestellt, um die Abweichung zwischen der idealen und der real gemessenen Energieverteilung im Frequenzbereich zu veranschaulichen.
+Der Wert $\Delta A_i$ wird anschließend für jedes Segment im Plot als Text dargestellt, um die Abweichung zwischen der idealen und der real gemessenen Energieverteilung im Frequenzbereich zu veranschaulichen.
+
+
+
+
+
+
 
 ## Zusammenfassung
 
 - **Transformation:** Das Audiosignal wird in den Frequenzraum transformiert, um das Amplitudenspektrum zu erhalten.
 - **Spektrumanalyse:** Es wird das Amplitudenspektrum berechnet, indem die Beträge der Fourier-Koeffizienten ermittelt werden.
-- **Segmentierung:** Der Frequenzbereich (z.B. von 0 bis 2000 Hz) wird in \( n \) gleich große Segmente unterteilt, wobei die Breite jedes Segments \( W = \frac{2000}{n} \) beträgt.
-- **Flächenberechnung:** Für jedes Segment wird die ideale Rechtecksfläche \( W \times A_{\text{max}} \) als Referenz berechnet, und die tatsächliche Fläche unter der Spektrumskurve wird mittels Trapezregel integriert.
-- **Differenzbildung:** Die Differenz \( \Delta A_i = \text{Fläche}_{\text{Rechteck}} - \text{Fläche}_{\text{Spektrum}} \) zeigt den Flächenunterschied im Segment und wird zur Visualisierung in den Plot eingeblendet.
+- **Segmentierung:** Der Frequenzbereich (z.B. von 0 bis 2000 Hz) wird in $n$ gleich große Segmente unterteilt, wobei die Breite jedes Segments $W = \frac{2000}{n}$ beträgt.
+- **Flächenberechnung:** Für jedes Segment wird die ideale Rechtecksfläche $W \times A_{max}$ als Referenz berechnet, und die tatsächliche Fläche unter der Spektrumskurve wird mittels Trapezregel integriert.
+- **Differenzbildung:** Die Differenz $\Delta_i = Fläche_{Rechteck} - Fläche_{Spektrum}$ zeigt den Flächenunterschied im Segment und wird zur Visualisierung in den Plot eingeblendet.
+
 
 # Fingerprint als verkettete Liste. Erstellung eines Audio Fingerprints.
 
@@ -584,13 +578,13 @@ Dieser Prozess unterteilt das Frequenzspektrum eines Audiosignals in mehrere Seg
 Jedes Element der verketteten Liste enthält folgende Informationen:
 
 - **index:**  
-  Der fortlaufende Index des Segments (z. B. \( 0, 1, 2, \dots \)).
+  Der fortlaufende Index des Segments (z. B. $0, 1, 2, \dots$).
 
 - **seg_start:**  
-  Die Startfrequenz des Segments (zum Beispiel \( x_{\min} + i \cdot W \)).
+  Die Startfrequenz des Segments (zum Beispiel $x_{\min} + i \cdot W$).
 
 - **seg_end:**  
-  Die Endfrequenz des Segments (also \( \text{seg_start} + W \)).
+  Die Endfrequenz des Segments (also ${seg\_start} + W$).
 
 - **usage_percent:**  
   Der Prozentsatz der idealen Fläche, der durch die tatsächliche Fläche unter der Spektrumskurve abgedeckt wird. Dies gibt an, wie "voll" das Segment im Vergleich zum Maximum ist.
@@ -600,6 +594,7 @@ Jedes Element der verketteten Liste enthält folgende Informationen:
 
 - **prev & next:**  
   Zeiger (Referenzen) auf das vorherige und das nächste Element der Liste. Dies ermöglicht das Durchlaufen der Liste (verkettete Liste).
+
 
 ### Beispielhafte Struktur eines Listenelements
 
@@ -985,22 +980,22 @@ print(f"Vermuteter dynamischer Effekt: {dynamic_info['predicted_dynamic_effect']
 
 
     
-![png](frequenz_test_files/frequenz_test_15_1.png)
+    ![png](frequenz_test_files/output2.png)
     
 
 
     
     Globaler Audioeffekt basierend auf Nutzungsanteilen der Spektren:
-    Gewichtete Durchschnittliche Differenz: 0.24%
+    Gewichtete Durchschnittliche Differenz: 4.05%
     Vermuteter globaler Effekt: Boost im Bassbereich
-    
+
     80%-Frequenzbereich: 91 Hz bis 758 Hz
-    
+
     Analyse der dynamischen Kennzahlen:
-    Original RMS: 0.0908, Neues RMS: 0.0861, Änderung: -5.19%
-    Original Crest-Factor: 4.69, Neuer Crest-Factor: 4.67, Änderung: -0.50%
+    Original RMS: 0.0908, Neues RMS: 0.1658, Änderung: 82.55%
+    Original Crest-Factor: 4.69, Neuer Crest-Factor: 3.75, Änderung: -20.17%
     Delay-Indikator (Anzahl signifikanter Peaks): 8
-    Vermuteter dynamischer Effekt: Kein eindeutiger dynamischer Effekt
+    Vermuteter dynamischer Effekt: Kompression (verringerter Dynamikumfang)
     
 
 # Audiofile Analyse
@@ -1009,28 +1004,24 @@ In diesem Notebook wird ein Vergleich zwischen zwei Audiofiles durchgeführt –
 
 ---
 
-## 3. Integration zur Bestimmung der Energie
+## Integration zur Bestimmung der Energie
 
 - **Numerische Integration:**  
   Innerhalb jedes Frequenzsegments wird das Integral (die Fläche unter der Spektralkurve) berechnet. Hierfür kommt eine Simpson-Regel zum Einsatz, die eine effiziente Methode zur numerischen Approximation von Integralen darstellt.  
   *Mathematisch:*  
-  \[
-  \text{Integral} \approx \int_{f_1}^{f_2} |X(f)| \, df
-  \]
-  
+  $\int_\approx \int_{f_1}^{f_2} \left| X(f) \right| \, df$
+
 - **Vergleich von Energieanteilen:**  
   Die berechneten Integrale pro Segment werden relativ zur idealen Boxfläche in Prozent ausgedrückt, was den "Nutzungsanteil" des Frequenzbands quantifiziert.
 
 ---
 
-## 4. Vergleich und Gewichtung der Spektren
+## Vergleich und Gewichtung der Spektren
 
 - **Abweichungsberechnung:**  
   Für jedes Segment wird die prozentuale Differenz zwischen den Nutzungsanteilen des Original- und des neuen Audios berechnet:
-  \[
-  \text{Abweichung} = \left| \frac{\text{Nutzung}_{\text{neu}} - \text{Nutzung}_{\text{orig}}}{\text{Boxfläche}} \right| \times 100\%
-  \]
-  
+  $Abweichung = \left| \frac{Nutzung_{neu} - Nutzung_{orig}}{Boxfläche} \right| \times 100\%$
+
 - **Klassifizierung der Effekte:**  
   Basierend auf vorgegebenen Schwellenwerten werden die Abweichungen in unterschiedliche Effekte (z. B. "Boost", "Cut" oder "Neues Audiofile") eingeordnet.
 
@@ -1039,14 +1030,12 @@ In diesem Notebook wird ein Vergleich zwischen zwei Audiofiles durchgeführt –
 
 ---
 
-## 5. Dynamische Analyse im Zeitbereich
+## Dynamische Analyse im Zeitbereich
 
 - **Berechnung von RMS, Peak und Crest-Faktor:**  
   Neben der Frequenzanalyse wird auch das dynamische Verhalten untersucht.  
   - **RMS (Root Mean Square):** Gibt den durchschnittlichen Energieinhalt des Signals an.  
-    \[
-    \text{RMS} = \sqrt{\frac{1}{N}\sum_{n=0}^{N-1} x(n)^2}
-    \]
+    $RMS = \sqrt{\frac{1}{N}\sum_{n=0}^{N-1} x(n)^2}$
   - **Peak:** Der maximale Amplitudenwert im Signal.
   - **Crest-Faktor:** Das Verhältnis von Peak zu RMS, was Rückschlüsse auf die Signalspitzen ermöglicht.
   
@@ -1055,6 +1044,8 @@ In diesem Notebook wird ein Vergleich zwischen zwei Audiofiles durchgeführt –
 
 - **Vergleich der dynamischen Kennzahlen:**  
   Veränderungen in diesen Kennzahlen (RMS, Crest, Peaks) zwischen dem Original und dem neuen Audio geben Aufschluss darüber, ob etwaige Effekte wie Kompression, Clipping oder Gain-Veränderungen vorliegen.
+
+
 
 ---
 
@@ -1312,7 +1303,7 @@ In diesem Codeabschnitt wird der Frequenzbereich eines Audiosignals in eine fest
 
 ---
 
-## 1. Lokale Skalierung
+## Lokale Skalierung
 
 **Beschreibung:**  
 - **Berechnung:**  
@@ -1336,7 +1327,7 @@ In diesem Codeabschnitt wird der Frequenzbereich eines Audiosignals in eine fest
 
 ---
 
-## 2. Einheitliche Skalierung
+## Einheitliche Skalierung
 
 **Beschreibung:**  
 - **Berechnung:**  
