@@ -2,7 +2,7 @@
 
 ## Ziel des Projekts
 
-Das Projekt soll jedem Audiofile einen individuellen Fingerabdruck zuweisen, sodass der Nutzer definieren kann, wie stark ein anderes Audiofile von seinem Original abweichen darf, bevor es als Plagiat gilt. Dies ermöglicht es, effizient Fingerprints zu speichern und miteinander zu vergleichen, um Open-Source-Plagiate von Werken aufzudecken – ein Werkzeug, das Künstler in Zukunft vor unautorisierten Kopien schützen soll.
+Das Projekt soll jedem Audiofile einen individuellen Fingerabdruck zuweisen, sodass der Nutzer definieren kann, wie stark ein anderes Audiofile von seinem Original abweichen darf, bevor es als Plagiat gilt. Dies ermöglicht es, effizient Fingerprints zu speichern und miteinander zu vergleichen. Künstler soll es in Zukunft mittels Open-Source möglich sein ihre Werke zu schützen und Kopien aufzudecken. Mit der folgenden Methode können die Künstler mathematisch nachweisen, dass ihr Werk das Original ist.
 
 ---
 
