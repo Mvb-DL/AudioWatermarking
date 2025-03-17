@@ -205,7 +205,8 @@ $$
 W = \frac{x_{\max} - x_{\min}}{n}
 $$
 
-Für jedes Segment \( i \) (wobei \( i = 0, 1, 2, \dots, n-1 \)) gilt dann:
+Für jedes Segment \(i\) (wobei \(i = 0, 1, 2, \dots, n-1\)) gilt dann:
+
 
 $$
 x_{\text{start}, i} = x_{\min} + i \cdot W
