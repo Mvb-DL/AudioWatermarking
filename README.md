@@ -972,10 +972,10 @@ print(f"Delay-Indikator (Anzahl signifikanter Peaks): {dynamic_info['delay_indic
 print(f"Vermuteter dynamischer Effekt: {dynamic_info['predicted_dynamic_effect']}")
 
 
-
+```
     
-Gewichtete Durchschnittliche Differenz: 0.24%
-Globaler Durchschnitt (ungewichtetes Mittel): 0.10%
+Gewichtete Durchschnittliche Differenz: 4.05%%
+Globaler Durchschnitt (ungewichtetes Mittel): 1.72%
     
 
 
