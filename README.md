@@ -234,11 +234,10 @@ Dabei ist:
 **Berechnung der maximal möglichen Segmente:**  
 Für einen definierten Frequenzbereich von $x_{\text{min}}$ bis $x_{\text{max}}$ wird die maximal mögliche Anzahl an Segmenten berechnet, indem der Gesamtfrequenzbereich durch die Frequenzauflösung geteilt wird:
 
-```text
+
 $$
-\text{max_{segments_{possible}}} = \text{x_{\text{max}} - x_{\text{min}}}{\Delta f}
+max_{segments_{possible}} = \frac{x_{max} - x_{min}}{\Delta f}
 $$
-```
 
 
 Der so berechnete Wert wird anschließend in einen ganzzahligen Wert umgewandelt, um die Anzahl der sinnvollen Segmente zu erhalten.
@@ -1001,7 +1000,7 @@ In diesem Notebook wird ein Vergleich zwischen zwei Audiofiles durchgeführt –
   Innerhalb jedes Frequenzsegments wird das Integral (die Fläche unter der Spektralkurve) berechnet. Hierfür kommt eine Simpson-Regel zum Einsatz, die eine effiziente Methode zur numerischen Approximation von Integralen darstellt.  
   *Mathematisch:*  
   $$
-  \text{Integral} \approx \int_{f_1}^{f_2} |X(f)| \, df
+  Integral \approx \int_{f_1}^{f_2} |X(f)| \, df
   $$
 
 - **Vergleich von Energieanteilen:**  
@@ -1014,7 +1013,7 @@ In diesem Notebook wird ein Vergleich zwischen zwei Audiofiles durchgeführt –
 - **Abweichungsberechnung:**  
   Für jedes Segment wird die prozentuale Differenz zwischen den Nutzungsanteilen des Original- und des neuen Audios berechnet:
   $$
-  \text{Abweichung} = \left| \frac{\text{Nutzung}_{\text{neu}} - \text{Nutzung}_{\text{orig}}}{\text{Boxfläche}} \right| \times 100\%
+  Abweichung = \left| \frac{Nutzung_{neu} - Nutzung_{orig}}{Boxfläche} \right| \times 100\%
   $$
 
 - **Klassifizierung der Effekte:**  
@@ -1031,7 +1030,7 @@ In diesem Notebook wird ein Vergleich zwischen zwei Audiofiles durchgeführt –
   Neben der Frequenzanalyse wird auch das dynamische Verhalten untersucht.  
   - **RMS (Root Mean Square):** Gibt den durchschnittlichen Energieinhalt des Signals an.  
     $$
-    \text{RMS} = \sqrt{\frac{1}{N}\sum_{n=0}^{N-1} x(n)^2}
+    RMS = \sqrt{\frac{1}{N}\sum_{n=0}^{N-1} x(n)^2}
     $$
   - **Peak:** Der maximale Amplitudenwert im Signal.
   - **Crest-Faktor:** Das Verhältnis von Peak zu RMS, was Rückschlüsse auf die Signalspitzen ermöglicht.
@@ -1041,6 +1040,7 @@ In diesem Notebook wird ein Vergleich zwischen zwei Audiofiles durchgeführt –
 
 - **Vergleich der dynamischen Kennzahlen:**  
   Veränderungen in diesen Kennzahlen (RMS, Crest, Peaks) zwischen dem Original und dem neuen Audio geben Aufschluss darüber, ob etwaige Effekte wie Kompression, Clipping oder Gain-Veränderungen vorliegen.
+
 
 
 ---
