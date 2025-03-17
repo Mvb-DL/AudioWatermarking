@@ -973,17 +973,13 @@ print(f"Vermuteter dynamischer Effekt: {dynamic_info['predicted_dynamic_effect']
 
 
 ```
-    
-Gewichtete Durchschnittliche Differenz: 4.05%%
-Globaler Durchschnitt (ungewichtetes Mittel): 1.72%
-    
-
 
     
 ![png](frequenz_test_files/output2.png)
     
 
-
+Gewichtete Durchschnittliche Differenz: 4.05%%
+Globaler Durchschnitt (ungewichtetes Mittel): 1.72%
     
 Globaler Audioeffekt basierend auf Nutzungsanteilen der Spektren:
 Gewichtete Durchschnittliche Differenz: 4.05%
