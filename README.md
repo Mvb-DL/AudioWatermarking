@@ -221,18 +221,18 @@ Die Funktion `compute_max_segments` berechnet die maximal mögliche Anzahl an Se
 ## Mathematischer Hintergrund
 
 **Frequenzauflösung:**  
-Nach dem Laden des Audiosignals wird die Frequenzauflösung, \(\Delta f\), ermittelt, die angibt, wie groß der Frequenzabstand zwischen zwei benachbarten Punkten im Spektrum ist. Sie berechnet sich wie folgt:
+Nach dem Laden des Audiosignals wird die Frequenzauflösung, $\Delta f$, ermittelt, die angibt, wie groß der Frequenzabstand zwischen zwei benachbarten Punkten im Spektrum ist. Sie berechnet sich wie folgt:
 
 $$
 \Delta f = \frac{sr}{N}
 $$
 
 Dabei ist:
-- \(sr\) die Abtastrate des Signals,
-- \(N\) die Anzahl der Signalproben.
+- $sr$ die Abtastrate des Signals,
+- $N$ die Anzahl der Signalproben.
 
 **Berechnung der maximal möglichen Segmente:**  
-Für einen definierten Frequenzbereich von \(x_{\min}\) bis \(x_{\max}\) wird die maximal mögliche Anzahl an Segmenten berechnet, indem der Gesamtfrequenzbereich durch die Frequenzauflösung geteilt wird:
+Für einen definierten Frequenzbereich von $x_{\min}$ bis $x_{\max}$ wird die maximal mögliche Anzahl an Segmenten berechnet, indem der Gesamtfrequenzbereich durch die Frequenzauflösung geteilt wird:
 
 $$
 \text{max\_segments\_possible} = \frac{x_{\max} - x_{\min}}{\Delta f}
@@ -347,13 +347,13 @@ plt.show()
 
 # Beschreibung der Frequenzspektrumsegmentierung und Flächenberechnung
 
-Der vorgestellte Vorgang unterteilt das Frequenzspektrum eines Audiosignals in \( n \) gleich große Segmente und vergleicht für jedes Segment die ideale Rechtecksfläche mit der tatsächlich integrierten Fläche unter der Spektrumskurve. Dabei wird mittels der Trapezregel die Fläche der Kurve im jeweiligen Frequenzintervall numerisch bestimmt und von der idealen Fläche subtrahiert.
+Der vorgestellte Vorgang unterteilt das Frequenzspektrum eines Audiosignals in $n$ gleich große Segmente und vergleicht für jedes Segment die ideale Rechtecksfläche mit der tatsächlich integrierten Fläche unter der Spektrumskurve. Dabei wird mittels der Trapezregel die Fläche der Kurve im jeweiligen Frequenzintervall numerisch bestimmt und von der idealen Fläche subtrahiert.
 
 ## 4. Flächenberechnung im Segment
 
 ### Ideale Rechtecksfläche
 
-Für jedes Segment wird zunächst eine ideale Rechtecksfläche als Referenz festgelegt. Diese Fläche wird durch die maximale Amplitude \( A_{\text{max}} \) im betrachteten Frequenzbereich multipliziert mit der Segmentbreite \( W \) definiert:
+Für jedes Segment wird zunächst eine ideale Rechtecksfläche als Referenz festgelegt. Diese Fläche wird durch die maximale Amplitude $A_{\text{max}}$ im betrachteten Frequenzbereich multipliziert mit der Segmentbreite $W$ definiert:
 
 $$
 \text{Fläche}_{\text{Rechteck}} = W \times A_{\text{max}}
@@ -367,7 +367,7 @@ $$
 \text{Fläche}_{\text{Spektrum}} = \int_{\text{Start}_i}^{\text{Ende}_i} |X(f)| \, df
 $$
 
-wobei \( |X(f)| \) die Amplitude des Spektrums in Abhängigkeit von der Frequenz \( f \) ist.
+wobei $|X(f)|$ die Amplitude des Spektrums in Abhängigkeit von der Frequenz $f$ ist.
 
 ## 5. Differenzbildung
 
@@ -377,15 +377,16 @@ $$
 \Delta A_i = \text{Fläche}_{\text{Rechteck}} - \text{Fläche}_{\text{Spektrum}}
 $$
 
-Der Wert \( \Delta A_i \) wird anschließend für jedes Segment im Plot als Text dargestellt, um die Abweichung zwischen der idealen und der real gemessenen Energieverteilung im Frequenzbereich zu veranschaulichen.
+Der Wert $\Delta A_i$ wird anschließend für jedes Segment im Plot als Text dargestellt, um die Abweichung zwischen der idealen und der real gemessenen Energieverteilung im Frequenzbereich zu veranschaulichen.
+
 
 ## Zusammenfassung
 
 - **Transformation:** Das Audiosignal wird in den Frequenzraum transformiert, um das Amplitudenspektrum zu erhalten.
 - **Spektrumanalyse:** Es wird das Amplitudenspektrum berechnet, indem die Beträge der Fourier-Koeffizienten ermittelt werden.
-- **Segmentierung:** Der Frequenzbereich (z.B. von 0 bis 2000 Hz) wird in \( n \) gleich große Segmente unterteilt, wobei die Breite jedes Segments \( W = \frac{2000}{n} \) beträgt.
-- **Flächenberechnung:** Für jedes Segment wird die ideale Rechtecksfläche \( W \times A_{\text{max}} \) als Referenz berechnet, und die tatsächliche Fläche unter der Spektrumskurve wird mittels Trapezregel integriert.
-- **Differenzbildung:** Die Differenz \( \Delta A_i = \text{Fläche}_{\text{Rechteck}} - \text{Fläche}_{\text{Spektrum}} \) zeigt den Flächenunterschied im Segment und wird zur Visualisierung in den Plot eingeblendet.
+- **Segmentierung:** Der Frequenzbereich (z.B. von 0 bis 2000 Hz) wird in $n$ gleich große Segmente unterteilt, wobei die Breite jedes Segments $W = \frac{2000}{n}$ beträgt.
+- **Flächenberechnung:** Für jedes Segment wird die ideale Rechtecksfläche $W \times A_{\text{max}}$ als Referenz berechnet, und die tatsächliche Fläche unter der Spektrumskurve wird mittels Trapezregel integriert.
+- **Differenzbildung:** Die Differenz $ \Delta A_i = \text{Fläche}_{\text{Rechteck}} - \text{Fläche}_{\text{Spektrum}} $ zeigt den Flächenunterschied im Segment und wird zur Visualisierung in den Plot eingeblendet.
 
 # Fingerprint als verkettete Liste. Erstellung eines Audio Fingerprints.
 
@@ -566,13 +567,13 @@ Dieser Prozess unterteilt das Frequenzspektrum eines Audiosignals in mehrere Seg
 Jedes Element der verketteten Liste enthält folgende Informationen:
 
 - **index:**  
-  Der fortlaufende Index des Segments (z. B. \( 0, 1, 2, \dots \)).
+  Der fortlaufende Index des Segments (z. B. $0, 1, 2, \dots$).
 
 - **seg_start:**  
-  Die Startfrequenz des Segments (zum Beispiel \( x_{\min} + i \cdot W \)).
+  Die Startfrequenz des Segments (zum Beispiel $x_{\min} + i \cdot W$).
 
 - **seg_end:**  
-  Die Endfrequenz des Segments (also \( \text{seg_start} + W \)).
+  Die Endfrequenz des Segments (also $\text{seg\_start} + W$).
 
 - **usage_percent:**  
   Der Prozentsatz der idealen Fläche, der durch die tatsächliche Fläche unter der Spektrumskurve abgedeckt wird. Dies gibt an, wie "voll" das Segment im Vergleich zum Maximum ist.
@@ -582,6 +583,7 @@ Jedes Element der verketteten Liste enthält folgende Informationen:
 
 - **prev & next:**  
   Zeiger (Referenzen) auf das vorherige und das nächste Element der Liste. Dies ermöglicht das Durchlaufen der Liste (verkettete Liste).
+
 
 ### Beispielhafte Struktur eines Listenelements
 
@@ -996,10 +998,10 @@ In diesem Notebook wird ein Vergleich zwischen zwei Audiofiles durchgeführt –
 - **Numerische Integration:**  
   Innerhalb jedes Frequenzsegments wird das Integral (die Fläche unter der Spektralkurve) berechnet. Hierfür kommt eine Simpson-Regel zum Einsatz, die eine effiziente Methode zur numerischen Approximation von Integralen darstellt.  
   *Mathematisch:*  
-  \[
+  $$
   \text{Integral} \approx \int_{f_1}^{f_2} |X(f)| \, df
-  \]
-  
+  $$
+
 - **Vergleich von Energieanteilen:**  
   Die berechneten Integrale pro Segment werden relativ zur idealen Boxfläche in Prozent ausgedrückt, was den "Nutzungsanteil" des Frequenzbands quantifiziert.
 
@@ -1009,10 +1011,10 @@ In diesem Notebook wird ein Vergleich zwischen zwei Audiofiles durchgeführt –
 
 - **Abweichungsberechnung:**  
   Für jedes Segment wird die prozentuale Differenz zwischen den Nutzungsanteilen des Original- und des neuen Audios berechnet:
-  \[
+  $$
   \text{Abweichung} = \left| \frac{\text{Nutzung}_{\text{neu}} - \text{Nutzung}_{\text{orig}}}{\text{Boxfläche}} \right| \times 100\%
-  \]
-  
+  $$
+
 - **Klassifizierung der Effekte:**  
   Basierend auf vorgegebenen Schwellenwerten werden die Abweichungen in unterschiedliche Effekte (z. B. "Boost", "Cut" oder "Neues Audiofile") eingeordnet.
 
@@ -1026,9 +1028,9 @@ In diesem Notebook wird ein Vergleich zwischen zwei Audiofiles durchgeführt –
 - **Berechnung von RMS, Peak und Crest-Faktor:**  
   Neben der Frequenzanalyse wird auch das dynamische Verhalten untersucht.  
   - **RMS (Root Mean Square):** Gibt den durchschnittlichen Energieinhalt des Signals an.  
-    \[
+    $$
     \text{RMS} = \sqrt{\frac{1}{N}\sum_{n=0}^{N-1} x(n)^2}
-    \]
+    $$
   - **Peak:** Der maximale Amplitudenwert im Signal.
   - **Crest-Faktor:** Das Verhältnis von Peak zu RMS, was Rückschlüsse auf die Signalspitzen ermöglicht.
   
@@ -1037,6 +1039,7 @@ In diesem Notebook wird ein Vergleich zwischen zwei Audiofiles durchgeführt –
 
 - **Vergleich der dynamischen Kennzahlen:**  
   Veränderungen in diesen Kennzahlen (RMS, Crest, Peaks) zwischen dem Original und dem neuen Audio geben Aufschluss darüber, ob etwaige Effekte wie Kompression, Clipping oder Gain-Veränderungen vorliegen.
+
 
 ---
 
