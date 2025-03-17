@@ -348,27 +348,25 @@ plt.show()
 
 Der vorgestellte Vorgang unterteilt das Frequenzspektrum eines Audiosignals in $n$ gleich große Segmente und vergleicht für jedes Segment die ideale Rechtecksfläche mit der tatsächlich integrierten Fläche unter der Spektrumskurve. Dabei wird mittels der Trapezregel die Fläche der Kurve im jeweiligen Frequenzintervall numerisch bestimmt und von der idealen Fläche subtrahiert.
 
-## 4. Flächenberechnung im Segment
+# 4. Flächenberechnung im Segment
 
-### Ideale Rechtecksfläche
-
-Für jedes Segment wird zunächst eine ideale Rechtecksfläche als Referenz festgelegt. Diese Fläche wird durch die maximale Amplitude $A_{\text{max}}$ im betrachteten Frequenzbereich multipliziert mit der Segmentbreite $W$ definiert:
+## Ideale Rechtecksfläche
+Für jedes Segment wird zunächst eine ideale Rechtecksfläche als Referenz festgelegt. Diese Fläche wird definiert als das Produkt der Segmentbreite \( W \) und der maximalen Amplitude \( A_{\text{max}} \) im betrachteten Frequenzbereich:
 
 $$
-\text{Fläche}_{\text{Rechteck}} = W \times A_{\text{max}}
+\text{Fläche}_{\text{Rechteck}} = W \cdot A_{\text{max}}
 $$
 
-### Integrierte Spektrumfläche
-
+## Integrierte Spektrumfläche
 Die tatsächliche Fläche unter der Spektrumskurve im jeweiligen Segment wird durch numerische Integration (hier mittels der Trapezregel) bestimmt:
 
 $$
-\text{Fläche}_{\text{Spektrum}} = \int_{\text{Start}_i}^{\text{Ende}_i} |X(f)| \, df
+\text{Fläche}_{\text{Spektrum}} = \int_{\text{Start}_i}^{\text{Ende}_i} \left| X(f) \right| \, df
 $$
 
-wobei $|X(f)|$ die Amplitude des Spektrums in Abhängigkeit von der Frequenz $f$ ist.
+Hierbei ist \(\left| X(f) \right|\) die Amplitude des Spektrums in Abhängigkeit von der Frequenz \( f \).
 
-## 5. Differenzbildung
+# 5. Differenzbildung
 
 Die Differenz zwischen der idealen Rechtecksfläche und der integrierten Spektrumfläche gibt an, wie groß der Flächenunterschied im jeweiligen Segment ist. Diese Differenz wird berechnet als:
 
@@ -376,7 +374,8 @@ $$
 \Delta A_i = \text{Fläche}_{\text{Rechteck}} - \text{Fläche}_{\text{Spektrum}}
 $$
 
-Der Wert $\Delta A_i$ wird anschließend für jedes Segment im Plot als Text dargestellt, um die Abweichung zwischen der idealen und der real gemessenen Energieverteilung im Frequenzbereich zu veranschaulichen.
+Der Wert \(\Delta A_i\) wird anschließend für jedes Segment im Plot als Text dargestellt, um die Abweichung zwischen der idealen und der real gemessenen Energieverteilung im Frequenzbereich zu veranschaulichen.
+
 
 
 ## Zusammenfassung
