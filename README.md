@@ -235,10 +235,11 @@ Dabei ist:
 Für einen definierten Frequenzbereich von $x_{\min}$ bis $x_{\max}$ wird die maximal mögliche Anzahl an Segmenten berechnet, indem der Gesamtfrequenzbereich durch die Frequenzauflösung geteilt wird:
 
 $$
-\text{max\_segments\_possible} = \frac{x_{\max} - x_{\min}}{\Delta f}
+\mathrm{max\_segments\_possible} = \frac{x_{\max} - x_{\min}}{\Delta f}
 $$
 
 Der so berechnete Wert wird anschließend in einen ganzzahligen Wert umgewandelt, um die Anzahl der sinnvollen Segmente zu erhalten.
+
 
 ## Quellcode der Funktion
 
