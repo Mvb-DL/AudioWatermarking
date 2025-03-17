@@ -980,22 +980,22 @@ print(f"Vermuteter dynamischer Effekt: {dynamic_info['predicted_dynamic_effect']
 
 
     
-![png](frequenz_test_files/frequenz_test_15_1.png)
+    ![png](frequenz_test_files/output2.png)
     
 
 
     
     Globaler Audioeffekt basierend auf Nutzungsanteilen der Spektren:
-    Gewichtete Durchschnittliche Differenz: 0.24%
+    Gewichtete Durchschnittliche Differenz: 4.05%
     Vermuteter globaler Effekt: Boost im Bassbereich
-    
+
     80%-Frequenzbereich: 91 Hz bis 758 Hz
-    
+
     Analyse der dynamischen Kennzahlen:
-    Original RMS: 0.0908, Neues RMS: 0.0861, Änderung: -5.19%
-    Original Crest-Factor: 4.69, Neuer Crest-Factor: 4.67, Änderung: -0.50%
+    Original RMS: 0.0908, Neues RMS: 0.1658, Änderung: 82.55%
+    Original Crest-Factor: 4.69, Neuer Crest-Factor: 3.75, Änderung: -20.17%
     Delay-Indikator (Anzahl signifikanter Peaks): 8
-    Vermuteter dynamischer Effekt: Kein eindeutiger dynamischer Effekt
+    Vermuteter dynamischer Effekt: Kompression (verringerter Dynamikumfang)
     
 
 # Audiofile Analyse
