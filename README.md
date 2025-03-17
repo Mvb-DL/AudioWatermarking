@@ -351,30 +351,31 @@ Der vorgestellte Vorgang unterteilt das Frequenzspektrum eines Audiosignals in $
 # 4. Flächenberechnung im Segment
 
 ## Ideale Rechtecksfläche
-Für jedes Segment wird zunächst eine ideale Rechtecksfläche als Referenz festgelegt. Diese Fläche wird definiert als das Produkt der Segmentbreite \( W \) und der maximalen Amplitude \( A_{\text{max}} \) im betrachteten Frequenzbereich:
+Für jedes Segment wird zunächst eine ideale Rechtecksfläche als Referenz festgelegt. Diese Fläche wird definiert als das Produkt der Segmentbreite $W$ und der maximalen Amplitude $A_{max}$ im betrachteten Frequenzbereich:
 
 $$
-\text{Fläche}_{\text{Rechteck}} = W \cdot A_{\text{max}}
+Fläche_{Rechteck} = W \cdot A_{max}
 $$
 
 ## Integrierte Spektrumfläche
 Die tatsächliche Fläche unter der Spektrumskurve im jeweiligen Segment wird durch numerische Integration (hier mittels der Trapezregel) bestimmt:
 
 $$
-\text{Fläche}_{\text{Spektrum}} = \int_{\text{Start}_i}^{\text{Ende}_i} \left| X(f) \right| \, df
+Fläche_{Spektrum} = \int_{Start_i}^{Ende_i} \left| X(f) \right| \, df
 $$
 
-Hierbei ist \(\left| X(f) \right|\) die Amplitude des Spektrums in Abhängigkeit von der Frequenz \( f \).
+Hierbei ist $\left| X(f) \right|$ die Amplitude des Spektrums in Abhängigkeit von der Frequenz $f$.
 
 # 5. Differenzbildung
 
 Die Differenz zwischen der idealen Rechtecksfläche und der integrierten Spektrumfläche gibt an, wie groß der Flächenunterschied im jeweiligen Segment ist. Diese Differenz wird berechnet als:
 
 $$
-\Delta A_i = \text{Fläche}_{\text{Rechteck}} - \text{Fläche}_{\text{Spektrum}}
+\Delta A_i = Fläche_{Rechteck} - Fläche_{Spektrum}
 $$
 
-Der Wert \(\Delta A_i\) wird anschließend für jedes Segment im Plot als Text dargestellt, um die Abweichung zwischen der idealen und der real gemessenen Energieverteilung im Frequenzbereich zu veranschaulichen.
+Der Wert $\Delta A_i$ wird anschließend für jedes Segment im Plot als Text dargestellt, um die Abweichung zwischen der idealen und der real gemessenen Energieverteilung im Frequenzbereich zu veranschaulichen.
+
 
 
 
