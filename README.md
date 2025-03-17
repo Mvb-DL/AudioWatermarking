@@ -50,6 +50,8 @@ Die Idee des Fingerprintings ist eigenständig entwickelt worden, auch wenn nach
 Feedback und Anregungen sind gerne an [mariovonbassen@gmail.com](mailto:mariovonbassen@gmail.com) zu richten
 
 
+
+
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
