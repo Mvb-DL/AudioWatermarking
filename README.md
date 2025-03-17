@@ -356,7 +356,7 @@ plt.show()
 
 Der vorgestellte Vorgang unterteilt das Frequenzspektrum eines Audiosignals in $n$ gleich große Segmente und vergleicht für jedes Segment die ideale Rechtecksfläche mit der tatsächlich integrierten Fläche unter der Spektrumskurve. Dabei wird mittels der Trapezregel die Fläche der Kurve im jeweiligen Frequenzintervall numerisch bestimmt und von der idealen Fläche subtrahiert.
 
-# 4. Flächenberechnung im Segment
+## 4. Flächenberechnung im Segment
 
 ## Ideale Rechtecksfläche
 Für jedes Segment wird zunächst eine ideale Rechtecksfläche als Referenz festgelegt. Diese Fläche wird definiert als das Produkt der Segmentbreite $W$ und der maximalen Amplitude $A_{max}$ im betrachteten Frequenzbereich:
@@ -374,7 +374,7 @@ $$
 
 Hierbei ist $\left| X(f) \right|$ die Amplitude des Spektrums in Abhängigkeit von der Frequenz $f$.
 
-# 5. Differenzbildung
+## 5. Differenzbildung
 
 Die Differenz zwischen der idealen Rechtecksfläche und der integrierten Spektrumfläche gibt an, wie groß der Flächenunterschied im jeweiligen Segment ist. Diese Differenz wird berechnet als:
 
@@ -1004,7 +1004,7 @@ In diesem Notebook wird ein Vergleich zwischen zwei Audiofiles durchgeführt –
 
 ---
 
-## 3. Integration zur Bestimmung der Energie
+## Integration zur Bestimmung der Energie
 
 - **Numerische Integration:**  
   Innerhalb jedes Frequenzsegments wird das Integral (die Fläche unter der Spektralkurve) berechnet. Hierfür kommt eine Simpson-Regel zum Einsatz, die eine effiziente Methode zur numerischen Approximation von Integralen darstellt.  
@@ -1016,7 +1016,7 @@ In diesem Notebook wird ein Vergleich zwischen zwei Audiofiles durchgeführt –
 
 ---
 
-## 4. Vergleich und Gewichtung der Spektren
+## Vergleich und Gewichtung der Spektren
 
 - **Abweichungsberechnung:**  
   Für jedes Segment wird die prozentuale Differenz zwischen den Nutzungsanteilen des Original- und des neuen Audios berechnet:
@@ -1030,7 +1030,7 @@ In diesem Notebook wird ein Vergleich zwischen zwei Audiofiles durchgeführt –
 
 ---
 
-## 5. Dynamische Analyse im Zeitbereich
+## Dynamische Analyse im Zeitbereich
 
 - **Berechnung von RMS, Peak und Crest-Faktor:**  
   Neben der Frequenzanalyse wird auch das dynamische Verhalten untersucht.  
@@ -1303,7 +1303,7 @@ In diesem Codeabschnitt wird der Frequenzbereich eines Audiosignals in eine fest
 
 ---
 
-## 1. Lokale Skalierung
+## Lokale Skalierung
 
 **Beschreibung:**  
 - **Berechnung:**  
@@ -1327,7 +1327,7 @@ In diesem Codeabschnitt wird der Frequenzbereich eines Audiosignals in eine fest
 
 ---
 
-## 2. Einheitliche Skalierung
+## Einheitliche Skalierung
 
 **Beschreibung:**  
 - **Berechnung:**  
