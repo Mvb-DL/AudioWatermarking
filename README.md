@@ -31,7 +31,7 @@ Die nächsten Schritte umfassen:
 - Umfangreiche Tests
 - Entwicklung einer praktischen Umsetzung (eventuell sogar mit einem eigenen Filetype)
 
-Ziel ist es, Künstlern ein effektives Werkzeug an die Hand zu geben, um Plagiate ihrer Werke frühzeitig zu erkennen und so ihre Originalität zu schützen.
+Ziel ist es, Künstlern ein effektives Werkzeug an die Hand zu geben, um Plagiate ihrer Werke frühzeitig zu erkennen und so ihre Originale zu schützen.
 
 ---
 
@@ -39,8 +39,8 @@ Ziel ist es, Künstlern ein effektives Werkzeug an die Hand zu geben, um Plagiat
 
 Das Urheberrecht an diesem Projekt liegt bei **Mario von Bassen**.  
 Der Autor ist Informatiker und kein Mathematiker, weshalb die mathematischen Formulierungen mit externer Unterstützung entstanden sind.  
-Die Idee des Fingerprintings ist eigenständig entwickelt worden, auch wenn nach Rechercheunternehmen wie Shazam verwandte Techniken verwenden – diese Umsetzung weicht in einigen Details ab.  
-Feedback und Anregungen sind gerne unter [mariovonbassen@gmail.com](mailto:mariovonbassen@gmail.com) willkommen.
+Die Idee des Fingerprintings ist eigenständig entwickelt worden, auch wenn nach Recherche Unternehmen wie Shazam verwandte Techniken verwenden – diese Umsetzung weicht in einigen Details ab.  
+Feedback und Anregungen sind gerne an [mariovonbassen@gmail.com](mailto:mariovonbassen@gmail.com) zu richten
 
 
 ```python
