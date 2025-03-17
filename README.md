@@ -313,11 +313,6 @@ plt.show()
 
 ```
 
-    C:\Users\Dell\AppData\Local\Temp\ipykernel_2592\4286130952.py:68: UserWarning: No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
-      plt.legend()
-    
-
-
     
 ![png](frequenz_test_files/frequenz_test_9_1.png)
     
