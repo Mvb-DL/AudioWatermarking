@@ -10,7 +10,14 @@ Das Projekt soll jedem Audiofile einen individuellen Fingerabdruck zuweisen, sod
 
 Jedes Audiosignal wird zunächst per Fourier-Transformation in den Frequenzbereich überführt und anschließend in gleich große Segmente unterteilt. In jedem Segment wird die Energie (das Integral der Amplituden) berechnet. Diese segmentierten Werte werden in Form von Fingerprints gespeichert – umgesetzt durch verkettete Listen, bei denen jedes Segment wichtige Parameter wie Start- und Endfrequenz, den prozentualen Anteil der idealen Fläche (*usage_percent*) und die tatsächliche Integralfläche enthält.
 
-### Innovative Aspekte und Vergleichsmethoden
+### Konkrete Schritte des Audio Fingerprintings
+
+1. Das Audiofile wird in ein Frequenzspektrum von Amplitude und Frequenz übertragen.
+2. Das Frequenzspektrum wird in n-viele Segmente aufgeteilt.
+3. Es wird die Gesamtsegmentfläche mit der direkten Energie-Integralfläche subtrahiert.
+4. Die einzelnen subtrahierten Segmentflächen werden in einer Datenstruktur in Form einer verketteten Liste gespeichert.
+5. Diese verkettete Liste wird in einen dreidimensionalen Raum übertragen (Der finale Fingerprint).
+6. Abschließend kann die verkettete Liste mit anderen verketteten Listen verglichen und deren Differenz erfasst werden. Charakteristische Abweichungen können Mutmaßungen darüber geben, was zu der Abweichung geführt hat (EQ, Gain, Compressing ...)
 
 Ein zentraler Aspekt der Methode ist die flexible Skalierung:
 
