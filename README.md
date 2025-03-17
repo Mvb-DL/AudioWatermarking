@@ -1000,7 +1000,7 @@ In diesem Notebook wird ein Vergleich zwischen zwei Audiofiles durchgeführt –
 - **Numerische Integration:**  
   Innerhalb jedes Frequenzsegments wird das Integral (die Fläche unter der Spektralkurve) berechnet. Hierfür kommt eine Simpson-Regel zum Einsatz, die eine effiziente Methode zur numerischen Approximation von Integralen darstellt.  
   *Mathematisch:*  
-  $Integral \approx \int_{f_1}^{f_2} \left| X(f) \right| \, df$
+  $\int_\approx \int_{f_1}^{f_2} \left| X(f) \right| \, df$
 
 - **Vergleich von Energieanteilen:**  
   Die berechneten Integrale pro Segment werden relativ zur idealen Boxfläche in Prozent ausgedrückt, was den "Nutzungsanteil" des Frequenzbands quantifiziert.
