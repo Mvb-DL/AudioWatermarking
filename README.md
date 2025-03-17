@@ -232,10 +232,10 @@ Dabei ist:
 - $N$ die Anzahl der Signalproben.
 
 **Berechnung der maximal möglichen Segmente:**  
-Für einen definierten Frequenzbereich von $x_{\operatorname{min}}$ bis $x_{\operatorname{max}}$ wird die maximal mögliche Anzahl an Segmenten berechnet, indem der Gesamtfrequenzbereich durch die Frequenzauflösung geteilt wird:
+Für einen definierten Frequenzbereich von $x_{\text{min}}$ bis $x_{\text{max}}$ wird die maximal mögliche Anzahl an Segmenten berechnet, indem der Gesamtfrequenzbereich durch die Frequenzauflösung geteilt wird:
 
 $$
-\operatorname{max\_segments\_possible} = \frac{x_{\operatorname{max}} - x_{\operatorname{min}}}{\Delta f}
+\text{max_{segments_{possible}}} = \text{x_{\text{max}} - x_{\text{min}}}{\Delta f}
 $$
 
 
