@@ -386,8 +386,9 @@ Der Wert $\Delta A_i$ wird anschließend für jedes Segment im Plot als Text dar
 - **Transformation:** Das Audiosignal wird in den Frequenzraum transformiert, um das Amplitudenspektrum zu erhalten.
 - **Spektrumanalyse:** Es wird das Amplitudenspektrum berechnet, indem die Beträge der Fourier-Koeffizienten ermittelt werden.
 - **Segmentierung:** Der Frequenzbereich (z.B. von 0 bis 2000 Hz) wird in $n$ gleich große Segmente unterteilt, wobei die Breite jedes Segments $W = \frac{2000}{n}$ beträgt.
-- **Flächenberechnung:** Für jedes Segment wird die ideale Rechtecksfläche $W \times A_{\text{max}}$ als Referenz berechnet, und die tatsächliche Fläche unter der Spektrumskurve wird mittels Trapezregel integriert.
-- **Differenzbildung:** Die Differenz $ \Delta A_i = \text{Fläche}_{\text{Rechteck}} - \text{Fläche}_{\text{Spektrum}} $ zeigt den Flächenunterschied im Segment und wird zur Visualisierung in den Plot eingeblendet.
+- **Flächenberechnung:** Für jedes Segment wird die ideale Rechtecksfläche $W \times A_{max}$ als Referenz berechnet, und die tatsächliche Fläche unter der Spektrumskurve wird mittels Trapezregel integriert.
+- **Differenzbildung:** Die Differenz $ \Delta A_i = Fläche_{Rechteck} - Fläche_{Spektrum} $ zeigt den Flächenunterschied im Segment und wird zur Visualisierung in den Plot eingeblendet.
+
 
 # Fingerprint als verkettete Liste. Erstellung eines Audio Fingerprints.
 
