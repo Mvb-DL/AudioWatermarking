@@ -80,6 +80,9 @@ plt.show()
 
 ```
 
+![png](frequenz_test_files/output.png)
+
+
 # Frequenzanalyse und Energieberechnung eines Audiosignals
 
 Das dargestellte Ergebnis ist ein Frequenzspektrum, das zeigt, wie sich die Energie eines Audiosignals über verschiedene Frequenzen verteilt. Auf der horizontalen Achse sind die Frequenzen in Hertz (Hz) abgetragen, während die vertikale Achse die Amplituden der entsprechenden Frequenzanteile anzeigt.
