@@ -239,6 +239,7 @@ $$
 $$
 
 
+
 Der so berechnete Wert wird anschließend in einen ganzzahligen Wert umgewandelt, um die Anzahl der sinnvollen Segmente zu erhalten.
 
 
