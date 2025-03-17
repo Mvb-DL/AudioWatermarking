@@ -220,25 +220,26 @@ Die Funktion `compute_max_segments` berechnet die maximal mögliche Anzahl an Se
 
 ## Mathematischer Hintergrund
 
-1. **Frequenzauflösung:**  
-   Nach dem Laden des Audiosignals wird die Frequenzauflösung \(\Delta f\) ermittelt, die angibt, wie groß der Frequenzabstand zwischen zwei benachbarten Punkten im Spektrum ist. Sie berechnet sich wie folgt:
-   
-   $$
-   \Delta f = \frac{sr}{N}
-   $$
-   
-   Hierbei ist:
-   - \( sr \) die Abtastrate des Signals,
-   - \( N \) die Anzahl der Signalproben.
+**Frequenzauflösung:**  
+Nach dem Laden des Audiosignals wird die Frequenzauflösung, \(\Delta f\), ermittelt, die angibt, wie groß der Frequenzabstand zwischen zwei benachbarten Punkten im Spektrum ist. Sie berechnet sich wie folgt:
 
-2. **Berechnung der maximal möglichen Segmente:**  
-   Für einen definierten Frequenzbereich von \( x_{\min} \) bis \( x_{\max} \) wird die maximal mögliche Anzahl an Segmenten berechnet, indem der Gesamtfrequenzbereich durch die Frequenzauflösung geteilt wird:
-   
-   $$
-   \text{max\_segments\_possible} = \frac{x_{\max} - x_{\min}}{\Delta f}
-   $$
-   
-   Der Wert wird anschließend in einen ganzzahligen Wert umgewandelt, um die Anzahl der sinnvollen Segmente zu erhalten.
+$$
+\Delta f = \frac{sr}{N}
+$$
+
+Dabei ist:
+- \(sr\) die Abtastrate des Signals,
+- \(N\) die Anzahl der Signalproben.
+
+**Berechnung der maximal möglichen Segmente:**  
+Für einen definierten Frequenzbereich von \(x_{\min}\) bis \(x_{\max}\) wird die maximal mögliche Anzahl an Segmenten berechnet, indem der Gesamtfrequenzbereich durch die Frequenzauflösung geteilt wird:
+
+$$
+\text{max\_segments\_possible} = \frac{x_{\max} - x_{\min}}{\Delta f}
+$$
+
+Der so berechnete Wert wird anschließend in einen ganzzahligen Wert umgewandelt, um die Anzahl der sinnvollen Segmente zu erhalten.
+
 
 ## Quellcode der Funktion
 
