@@ -378,6 +378,7 @@ Der Wert \(\Delta A_i\) wird anschließend für jedes Segment im Plot als Text d
 
 
 
+
 ## Zusammenfassung
 
 - **Transformation:** Das Audiosignal wird in den Frequenzraum transformiert, um das Amplitudenspektrum zu erhalten.
