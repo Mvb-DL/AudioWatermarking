@@ -1000,7 +1000,7 @@ In diesem Notebook wird ein Vergleich zwischen zwei Audiofiles durchgeführt –
 - **Numerische Integration:**  
   Innerhalb jedes Frequenzsegments wird das Integral (die Fläche unter der Spektralkurve) berechnet. Hierfür kommt eine Simpson-Regel zum Einsatz, die eine effiziente Methode zur numerischen Approximation von Integralen darstellt.  
   *Mathematisch:*  
-  $\Integral \approx \int_{f_1}^{f_2} \left| X(f) \right| \, df$
+  $Integral \approx \int_{f_1}^{f_2} \left| X(f) \right| \, df$
 
 - **Vergleich von Energieanteilen:**  
   Die berechneten Integrale pro Segment werden relativ zur idealen Boxfläche in Prozent ausgedrückt, was den "Nutzungsanteil" des Frequenzbands quantifiziert.
@@ -1011,9 +1011,7 @@ In diesem Notebook wird ein Vergleich zwischen zwei Audiofiles durchgeführt –
 
 - **Abweichungsberechnung:**  
   Für jedes Segment wird die prozentuale Differenz zwischen den Nutzungsanteilen des Original- und des neuen Audios berechnet:
-  $$
-  Abweichung = \left| \frac{Nutzung_{neu} - Nutzung_{orig}}{Boxfläche} \right| \times 100\%
-  $$
+  $Abweichung = \left| \frac{Nutzung_{neu} - Nutzung_{orig}}{Boxfläche} \right| \times 100\%$
 
 - **Klassifizierung der Effekte:**  
   Basierend auf vorgegebenen Schwellenwerten werden die Abweichungen in unterschiedliche Effekte (z. B. "Boost", "Cut" oder "Neues Audiofile") eingeordnet.
@@ -1028,9 +1026,7 @@ In diesem Notebook wird ein Vergleich zwischen zwei Audiofiles durchgeführt –
 - **Berechnung von RMS, Peak und Crest-Faktor:**  
   Neben der Frequenzanalyse wird auch das dynamische Verhalten untersucht.  
   - **RMS (Root Mean Square):** Gibt den durchschnittlichen Energieinhalt des Signals an.  
-    $$
-    RMS = \sqrt{\frac{1}{N}\sum_{n=0}^{N-1} x(n)^2}
-    $$
+    $RMS = \sqrt{\frac{1}{N}\sum_{n=0}^{N-1} x(n)^2}$
   - **Peak:** Der maximale Amplitudenwert im Signal.
   - **Crest-Faktor:** Das Verhältnis von Peak zu RMS, was Rückschlüsse auf die Signalspitzen ermöglicht.
   
