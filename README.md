@@ -1004,6 +1004,7 @@ In diesem Notebook wird ein Vergleich zwischen zwei Audiofiles durchgeführt –
   Integral \approx \int_{f_1}^{f_2} |X(f)| \, df
   $$
 
+
 - **Vergleich von Energieanteilen:**  
   Die berechneten Integrale pro Segment werden relativ zur idealen Boxfläche in Prozent ausgedrückt, was den "Nutzungsanteil" des Frequenzbands quantifiziert.
 
