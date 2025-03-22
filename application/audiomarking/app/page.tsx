@@ -9,6 +9,9 @@ export default function Home() {
   // Zustand für das zweite Upload-Feld
   const [showSecondUpload, setShowSecondUpload] = useState(false);
 
+  // Zustand, ob die grüne Box angezeigt wird
+  const [showGreenBox, setShowGreenBox] = useState(false);
+
   // Zustände für Upload-Feld 1
   const [selectedFile1, setSelectedFile1] = useState<File | null>(null);
   const [dragActive1, setDragActive1] = useState(false);
@@ -27,7 +30,9 @@ export default function Home() {
     fetch("https://raw.githubusercontent.com/Mvb-DL/AudioWatermarking/main/README.md")
       .then((res) => res.text())
       .then((text) => setMarkdownText(text))
-      .catch((err) => console.error("Fehler beim Laden der Markdown-Datei:", err));
+      .catch((err) =>
+        console.error("Fehler beim Laden der Markdown-Datei:", err)
+      );
   }, []);
 
   // Handler für Upload-Feld 1
@@ -114,13 +119,16 @@ export default function Home() {
     inputRef2.current?.click();
   };
 
-  // API-Aufruf-Funktion
+  // API-Aufruf-Funktion: Verwende hier die korrekten Endpunkt-Pfade (/api/fingerprint bzw. /api/compare)
   const handleSubmit = async () => {
+    // Grüne Box anzeigen, sobald einer der Buttons geklickt wird
+    setShowGreenBox(true);
+
     if (!showSecondUpload && selectedFile1) {
       const formData = new FormData();
       formData.append("audio", selectedFile1);
       try {
-        const res = await fetch("/fingerprinting", {
+        const res = await fetch("/api/fingerprint", {
           method: "POST",
           body: formData,
         });
@@ -133,7 +141,7 @@ export default function Home() {
       formData.append("audio1", selectedFile1);
       formData.append("audio2", selectedFile2);
       try {
-        const res = await fetch("/compare", {
+        const res = await fetch("/api/compare", {
           method: "POST",
           body: formData,
         });
@@ -157,9 +165,9 @@ export default function Home() {
           priority
         />
       </div>
-      {/* Hauptbereich: Linke Spalte (blaue & grüne Box) und rechte Box (rote Border) */}
+      {/* Hauptbereich: Linke Spalte (blaue & grüne Box) und rechte Box (Markdown-Viewer) */}
       <div className="flex flex-col md:flex-row gap-8 flex-grow md:items-stretch">
-        {/* Linke Spalte – feste Höhe, damit (blue + green + gap) gleich der rechten Box ist */}
+        {/* Linke Spalte – feste Höhe */}
         <div className="w-full md:w-2/4 flex flex-col gap-8 h-[400px] lg:h-[550px] xl:h-[700px]">
           <div className="flex flex-col flex-grow">
             {/* Blaue Box */}
@@ -266,26 +274,28 @@ export default function Home() {
                       </div>
                     )}
                   </div>
-                  {/* Toggle-Button */}
-                  <div className="mt-1 flex justify-start">
-                    {showSecondUpload ? (
-                      <button
-                        onClick={() => setShowSecondUpload(false)}
-                        className="p-2 border border-gray-300 rounded-none text-sm md:text-md bg-white font-[family-name:var(--font-geist-mono)] cursor-pointer"
-                        aria-label="Zweites Upload-Feld entfernen"
-                      >
-                        Fingerprint Audiofile
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => setShowSecondUpload(true)}
-                        className="p-2 border border-gray-300 rounded-none text-sm md:text-md bg-white font-[family-name:var(--font-geist-mono)] cursor-pointer"
-                        aria-label="Weiteres Upload-Feld hinzufügen"
-                      >
-                        Compare Audiofiles
-                      </button>
-                    )}
-                  </div>
+                  {/* Toggle-Button nur anzeigen, wenn die grüne Box noch nicht sichtbar ist */}
+                  {!showGreenBox && (
+                    <div className="mt-1 flex justify-start">
+                      {showSecondUpload ? (
+                        <button
+                          onClick={() => setShowSecondUpload(false)}
+                          className="p-2 border border-gray-300 rounded-none text-sm md:text-md bg-white font-[family-name:var(--font-geist-mono)] cursor-pointer"
+                          aria-label="Zweites Upload-Feld entfernen"
+                        >
+                          Fingerprint Audiofile
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setShowSecondUpload(true)}
+                          className="p-2 border border-gray-300 rounded-none text-sm md:text-md bg-white font-[family-name:var(--font-geist-mono)] cursor-pointer"
+                          aria-label="Weiteres Upload-Feld hinzufügen"
+                        >
+                          Compare Audiofiles
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </div>
                 {/* Rechte Spalte innerhalb der blauen Box: Statische Textbox */}
                 <div className="w-full md:w-1/2 h-full flex flex-col justify-between p-6 border bg-gray-50 dark:bg-gray-800">
@@ -328,17 +338,19 @@ export default function Home() {
                 </div>
               </div>
             </main>
-            {/* Grüne Box */}
-            <div className="w-full p-4 border border-green-500 bg-gray-50 dark:bg-gray-800 h-[150px] md:h-[100px] lg:h-[200px] xl:h-[300px]">
-              <p className="text-center text-gray-700 dark:text-gray-300">
-                Hier kommt der Inhalt der zweiten Box.
-              </p>
-            </div>
+            {/* Grüne Box wird nur angezeigt, wenn showGreenBox true ist */}
+            {showGreenBox && (
+              <div className="w-full p-4 border border-green-500 bg-gray-50 dark:bg-gray-800 h-[150px] md:h-[100px] lg:h-[200px] xl:h-[300px]">
+                <p className="text-center text-gray-700 dark:text-gray-300">
+                  Hier kommt der Inhalt der zweiten Box.
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Rechte Box (rote Border) – gleiche feste Höhe wie linke Spalte */}
-        <aside className="w-full md:w-2/4 p-4 border border-red-500 bg-gray-100 dark:bg-gray-900 flex flex-col h-[400px] lg:h-[550px] xl:h-[700px]">
+        {/* Rechte Box (Markdown-Viewer) */}
+        <aside className="w-full md:w-2/4 p-4 border border-red-500 bg-white dark:bg-black flex flex-col h-[400px] lg:h-[550px] xl:h-[700px]">
           <div className="flex-1 overflow-y-auto overflow-x-hidden min-h-0 markdown-body">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
