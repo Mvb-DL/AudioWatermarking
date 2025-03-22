@@ -2,6 +2,8 @@
 import React, { useState, useRef, ChangeEvent, DragEvent, useEffect } from "react";
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import "github-markdown-css/github-markdown.css";
 
 export default function Home() {
   // Zustand für das zweite Upload-Feld
@@ -20,9 +22,9 @@ export default function Home() {
   // Markdown-Zustand für die rechte Box
   const [markdownText, setMarkdownText] = useState("");
 
-  // Markdown aus der externen Datei laden (im public-Ordner, z.B. /content.md)
+  // Markdown aus GitHub laden (Raw-Version)
   useEffect(() => {
-    fetch("/content.md")
+    fetch("https://raw.githubusercontent.com/Mvb-DL/AudioWatermarking/main/README.md")
       .then((res) => res.text())
       .then((text) => setMarkdownText(text))
       .catch((err) => console.error("Fehler beim Laden der Markdown-Datei:", err));
@@ -142,193 +144,204 @@ export default function Home() {
     }
   };
 
-  // Definierte Höhe für beide Boxen – passt sich je nach Breakpoint an
-  const containerHeightClass =
-    "h-[200px] sm:h-[250px] md:h-[300px] lg:h-[350px] xl:h-[400px]";
-
   return (
     <div className="min-h-screen flex flex-col p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      {/* Hauptbereich mit flex-grow */}
-      <div className="flex flex-col md:flex-row gap-8 md:items-stretch flex-grow">
-        {/* Main-Element: Linke Spalte mit Upload und statischer Textbox */}
-        <main className="w-full md:w-2/4 flex flex-col gap-8 border border-blue-500">
-          {/* Logo */}
-          <div className="flex justify-center md:justify-start">
-            <Image
-              className="dark:invert"
-              src="/next.svg"
-              alt="Next.js logo"
-              width={180}
-              height={38}
-              priority
-            />
-          </div>
-          {/* Inhalt */}
-          <div className="flex flex-col-reverse md:flex-row gap-1 md:items-stretch">
-            {/* Linke Spalte: Uploadfelder */}
-            <div className="w-full md:w-1/2">
-              <div className={`${containerHeightClass} w-full border border-dashed`}>
-                {showSecondUpload ? (
-                  <div className="flex flex-col h-full gap-2">
-                    {/* Erstes Upload-Feld */}
-                    <div
-                      onDragOver={handleDragOver1}
-                      onDragLeave={handleDragLeave1}
-                      onDrop={handleDrop1}
-                      onClick={handleClick1}
-                      className={`flex-1 flex items-center justify-center border border-dashed cursor-pointer ${
-                        dragActive1
-                          ? "bg-gray-200 dark:bg-gray-600"
-                          : "bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800"
-                      }`}
-                    >
-                      <input
-                        ref={inputRef1}
-                        id="audio-upload-1"
-                        type="file"
-                        accept="audio/*"
-                        onChange={handleChange1}
-                        className="hidden"
-                      />
-                      {selectedFile1 ? (
-                        <span className="text-gray-900 dark:text-gray-100 overflow-hidden whitespace-nowrap text-ellipsis text-center">
-                          {selectedFile1.name}
-                        </span>
-                      ) : (
-                        <span className="text-gray-500 dark:text-gray-300 text-center md:text-lg">
-                          Add your <b className="font-semibold">first</b> audio file
-                        </span>
-                      )}
-                    </div>
-                    {/* Zweites Upload-Feld */}
-                    <div
-                      onDragOver={handleDragOver2}
-                      onDragLeave={handleDragLeave2}
-                      onDrop={handleDrop2}
-                      onClick={handleClick2}
-                      className={`flex-1 flex items-center justify-center border border-dashed cursor-pointer ${
-                        dragActive2
-                          ? "bg-gray-200 dark:bg-gray-600"
-                          : "bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800"
-                      }`}
-                    >
-                      <input
-                        ref={inputRef2}
-                        id="audio-upload-2"
-                        type="file"
-                        accept="audio/*"
-                        onChange={handleChange2}
-                        className="hidden"
-                      />
-                      {selectedFile2 ? (
-                        <span className="text-gray-900 dark:text-gray-100 overflow-hidden whitespace-nowrap text-ellipsis text-center">
-                          {selectedFile2.name}
-                        </span>
-                      ) : (
-                        <span className="text-gray-500 dark:text-gray-300 text-center md:text-lg">
-                          Add your <b className="font-semibold">second</b> audio file
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  <div
-                    onDragOver={handleDragOver1}
-                    onDragLeave={handleDragLeave1}
-                    onDrop={handleDrop1}
-                    onClick={handleClick1}
-                    className={`h-full flex items-center justify-center border border-dashed cursor-pointer ${
-                      dragActive1
-                        ? "bg-gray-200 dark:bg-gray-600"
-                        : "bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800"
-                    }`}
-                  >
-                    <input
-                      ref={inputRef1}
-                      id="audio-upload-1"
-                      type="file"
-                      accept="audio/*"
-                      onChange={handleChange1}
-                      className="hidden"
-                    />
-                    {selectedFile1 ? (
-                      <span className="text-gray-900 dark:text-gray-100 overflow-hidden whitespace-nowrap text-ellipsis text-center">
-                        {selectedFile1.name}
-                      </span>
+      {/* Logo außerhalb des Flex-Containers */}
+      <div className="flex justify-center md:justify-start">
+        <Image
+          className="dark:invert"
+          src="/next.svg"
+          alt="Next.js logo"
+          width={180}
+          height={38}
+          priority
+        />
+      </div>
+      {/* Hauptbereich: Linke Spalte (blaue und grüne Box) und rechte Box (rote Border) */}
+      <div className="flex flex-col md:flex-row gap-8 flex-grow md:items-stretch">
+        {/* Linke Spalte */}
+        <div className="w-full md:w-2/4 flex flex-col gap-8">
+          {/* Wrapper für beide Boxen */}
+          <div className="flex flex-col flex-grow">
+            {/* Blaue Box */}
+            <main className="w-full">
+              <div className="flex flex-col-reverse md:flex-row gap-1 md:items-stretch border border-blue-500">
+                {/* Linke Spalte: Uploadfelder */}
+                <div className="w-full md:w-1/2">
+                  <div className="h-[200px] sm:h-[250px] md:h-[300px] lg:h-[350px] xl:h-[400px] w-full border border-dashed">
+                    {showSecondUpload ? (
+                      <div className="flex flex-col h-full gap-2">
+                        {/* Erstes Upload-Feld */}
+                        <div
+                          onDragOver={handleDragOver1}
+                          onDragLeave={handleDragLeave1}
+                          onDrop={handleDrop1}
+                          onClick={handleClick1}
+                          className={`flex-1 flex items-center justify-center border border-dashed cursor-pointer ${
+                            dragActive1
+                              ? "bg-gray-200 dark:bg-gray-600"
+                              : "bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800"
+                          }`}
+                        >
+                          <input
+                            ref={inputRef1}
+                            id="audio-upload-1"
+                            type="file"
+                            accept="audio/*"
+                            onChange={handleChange1}
+                            className="hidden"
+                          />
+                          {selectedFile1 ? (
+                            <span className="text-gray-900 dark:text-gray-100 overflow-hidden whitespace-nowrap text-ellipsis text-center">
+                              {selectedFile1.name}
+                            </span>
+                          ) : (
+                            <span className="text-gray-500 dark:text-gray-300 text-center md:text-lg">
+                              Add your <b className="font-semibold">first</b> audio file
+                            </span>
+                          )}
+                        </div>
+                        {/* Zweites Upload-Feld */}
+                        <div
+                          onDragOver={handleDragOver2}
+                          onDragLeave={handleDragLeave2}
+                          onDrop={handleDrop2}
+                          onClick={handleClick2}
+                          className={`flex-1 flex items-center justify-center border border-dashed cursor-pointer ${
+                            dragActive2
+                              ? "bg-gray-200 dark:bg-gray-600"
+                              : "bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800"
+                          }`}
+                        >
+                          <input
+                            ref={inputRef2}
+                            id="audio-upload-2"
+                            type="file"
+                            accept="audio/*"
+                            onChange={handleChange2}
+                            className="hidden"
+                          />
+                          {selectedFile2 ? (
+                            <span className="text-gray-900 dark:text-gray-100 overflow-hidden whitespace-nowrap text-ellipsis text-center">
+                              {selectedFile2.name}
+                            </span>
+                          ) : (
+                            <span className="text-gray-500 dark:text-gray-300 text-center md:text-lg">
+                              Add your <b className="font-semibold">second</b> audio file
+                            </span>
+                          )}
+                        </div>
+                      </div>
                     ) : (
-                      <span className="text-gray-500 dark:text-gray-300 text-center">
-                        Add your audio file
-                      </span>
+                      <div
+                        onDragOver={handleDragOver1}
+                        onDragLeave={handleDragLeave1}
+                        onDrop={handleDrop1}
+                        onClick={handleClick1}
+                        className={`h-full flex items-center justify-center border border-dashed cursor-pointer ${
+                          dragActive1
+                            ? "bg-gray-200 dark:bg-gray-600"
+                            : "bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800"
+                        }`}
+                      >
+                        <input
+                          ref={inputRef1}
+                          id="audio-upload-1"
+                          type="file"
+                          accept="audio/*"
+                          onChange={handleChange1}
+                          className="hidden"
+                        />
+                        {selectedFile1 ? (
+                          <span className="text-gray-900 dark:text-gray-100 overflow-hidden whitespace-nowrap text-ellipsis text-center">
+                            {selectedFile1.name}
+                          </span>
+                        ) : (
+                          <span className="text-gray-500 dark:text-gray-300 text-center">
+                            Add your audio file
+                          </span>
+                        )}
+                      </div>
                     )}
                   </div>
-                )}
-              </div>
-              {/* Toggle-Button */}
-              <div className="mt-1 flex justify-start">
-                {showSecondUpload ? (
-                  <button
-                    onClick={() => setShowSecondUpload(false)}
-                    className="p-2 border border-gray-300 rounded-none text-sm md:text-md bg-white font-[family-name:var(--font-geist-mono)] cursor-pointer"
-                    aria-label="Zweites Upload-Feld entfernen"
-                  >
-                    Fingerprint Audiofile
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => setShowSecondUpload(true)}
-                    className="p-2 border border-gray-300 rounded-none text-sm md:text-md bg-white font-[family-name:var(--font-geist-mono)] cursor-pointer"
-                    aria-label="Weiteres Upload-Feld hinzufügen"
-                  >
-                    Compare Audiofiles
-                  </button>
-                )}
-              </div>
-            </div>
-            {/* Rechte Spalte innerhalb des Main-Elements: Statische Textbox */}
-            <div className={`w-full md:w-1/2 ${containerHeightClass} flex flex-col justify-between p-6 border bg-gray-50 dark:bg-gray-800`}>
-              <div className="w-full">
-                <ol className="list-inside list-decimal text-sm text-left font-[family-name:var(--font-geist-mono)]">
-                  <li className="mb-2 tracking-[-.01em]">
-                    Get started by editing{" "}
-                    <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded-none font-semibold">
-                      app/page.tsx
-                    </code>
-                    .
-                  </li>
-                  <li className="tracking-[-.01em]">
-                    Save and see your changes instantly.
-                  </li>
-                </ol>
-              </div>
-              {(!showSecondUpload && selectedFile1) && (
-                <button
-                  onClick={handleSubmit}
-                  className="w-full border border-solid border-transparent transition-colors flex items-center bg-foreground text-background gap-2 whitespace-nowrap hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm h-10 px-4 rounded-none"
-                >
-                  <div className="flex items-center gap-2 w-full">
-                    <Image className="dark:invert" src="/vercel.svg" alt="Vercel logomark" width={20} height={20} />
-                    <span className="flex-1 text-center">Fingerprint</span>
+                  {/* Toggle-Button */}
+                  <div className="mt-1 flex justify-start">
+                    {showSecondUpload ? (
+                      <button
+                        onClick={() => setShowSecondUpload(false)}
+                        className="p-2 border border-gray-300 rounded-none text-sm md:text-md bg-white font-[family-name:var(--font-geist-mono)] cursor-pointer"
+                        aria-label="Zweites Upload-Feld entfernen"
+                      >
+                        Fingerprint Audiofile
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => setShowSecondUpload(true)}
+                        className="p-2 border border-gray-300 rounded-none text-sm md:text-md bg-white font-[family-name:var(--font-geist-mono)] cursor-pointer"
+                        aria-label="Weiteres Upload-Feld hinzufügen"
+                      >
+                        Compare Audiofiles
+                      </button>
+                    )}
                   </div>
-                </button>
-              )}
-              {(showSecondUpload && selectedFile1 && selectedFile2) && (
-                <button
-                  onClick={handleSubmit}
-                  className="w-full border border-solid border-transparent transition-colors flex items-center bg-foreground text-background gap-2 whitespace-nowrap hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm h-10 px-4 rounded-none"
-                >
-                  <div className="flex items-center gap-2 w-full">
-                    <Image className="dark:invert" src="/vercel.svg" alt="Vercel logomark" width={20} height={20} />
-                    <span className="flex-1 text-center">Compare</span>
+                </div>
+                {/* Rechte Spalte innerhalb der blauen Box: Statische Textbox */}
+                <div className="w-full md:w-1/2 h-[200px] sm:h-[250px] md:h-[300px] lg:h-[350px] xl:h-[400px] flex flex-col justify-between p-6 border bg-gray-50 dark:bg-gray-800">
+                  <div className="w-full">
+                    <ol className="list-inside list-decimal text-sm text-left font-[family-name:var(--font-geist-mono)]">
+                      <li className="mb-2 tracking-[-.01em]">
+                        Get started by editing{" "}
+                        <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded-none font-semibold">
+                          app/page.tsx
+                        </code>
+                        .
+                      </li>
+                      <li className="tracking-[-.01em]">
+                        Save and see your changes instantly.
+                      </li>
+                    </ol>
                   </div>
-                </button>
-              )}
+                  {(!showSecondUpload && selectedFile1) && (
+                    <button
+                      onClick={handleSubmit}
+                      className="w-full border border-solid border-transparent transition-colors flex items-center bg-foreground text-background gap-2 whitespace-nowrap hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm h-10 px-4 rounded-none"
+                    >
+                      <div className="flex items-center gap-2 w-full">
+                        <Image className="dark:invert" src="/vercel.svg" alt="Vercel logomark" width={20} height={20} />
+                        <span className="flex-1 text-center">Fingerprint</span>
+                      </div>
+                    </button>
+                  )}
+                  {(showSecondUpload && selectedFile1 && selectedFile2) && (
+                    <button
+                      onClick={handleSubmit}
+                      className="w-full border border-solid border-transparent transition-colors flex items-center bg-foreground text-background gap-2 whitespace-nowrap hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm h-10 px-4 rounded-none"
+                    >
+                      <div className="flex items-center gap-2 w-full">
+                        <Image className="dark:invert" src="/vercel.svg" alt="Vercel logomark" width={20} height={20} />
+                        <span className="flex-1 text-center">Compare</span>
+                      </div>
+                    </button>
+                  )}
+                </div>
+              </div>
+            </main>
+            {/* Grüne Box */}
+            <div className="w-full p-4 border border-green-500 bg-gray-50 dark:bg-gray-800 overflow-hidden lg:h-[200px] xl:h-[300px]">
+              <p className="text-center text-gray-700 dark:text-gray-300">
+                Hier kommt der Inhalt der zweiten Box.
+              </p>
             </div>
           </div>
-        </main>
+        </div>
 
-        {/* Rechte Box (Aside) mit Markdown-Inhalt */}
-        <aside className={`w-full md:w-2/4 ${containerHeightClass} p-4 border bg-gray-100 dark:bg-gray-900 border-red-500 overflow-y-auto`}>
-          <ReactMarkdown>{markdownText}</ReactMarkdown>
+        {/* Rechte Box (rote Border) mit GitHub-Markdown-Styling */}
+        <aside className="w-full md:w-2/4 p-4 border border-red-500 bg-gray-100 dark:bg-gray-900 flex flex-col">
+          <div className="flex-1 overflow-y-auto min-h-0 markdown-body">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {markdownText}
+            </ReactMarkdown>
+          </div>
         </aside>
       </div>
     </div>
