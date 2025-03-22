@@ -173,14 +173,13 @@ export default function Home() {
             {/* Blaue Box */}
             <main className="w-full">
               <div
-                className="flex flex-col-reverse md:flex-row gap-1 md:items-stretch border border-blue-500
-                h-[250px] md:h-[300px] lg:h-[350px] xl:h-[400px]"
+                className="flex flex-col-reverse md:flex-row gap-1 md:items-stretch border border-blue-500 h-[350px] md:h-[300px] lg:h-[350px] xl:h-[400px]"
               >
-                {/* Linke Spalte: Uploadfelder */}
-                <div className="w-full md:w-1/2">
+                {/* Uploadfelder – in Mobile werden beide Container (Upload und Textbox) jeweils gleich hoch */}
+                <div className="w-full md:w-1/2 flex-1">
                   <div className="h-full w-full border border-dashed">
                     {showSecondUpload ? (
-                      <div className="flex flex-col h-full gap-2">
+                      <div className="flex flex-col h-full gap-1 md:gap-2">
                         {/* Erstes Upload-Feld */}
                         <div
                           onDragOver={handleDragOver1}
@@ -339,8 +338,8 @@ export default function Home() {
                     </div>
                   )}
                 </div>
-                {/* Rechte Spalte innerhalb der blauen Box: Statische Textbox */}
-                <div className="w-full md:w-1/2 h-full flex flex-col justify-between p-6 border bg-gray-50 dark:bg-gray-800">
+                {/* Statische Textbox */}
+                <div className="w-full md:w-1/2 flex-1 flex flex-col justify-between p-6 border bg-gray-50 dark:bg-gray-800">
                   <div className="w-full">
                     <ol className="list-inside list-decimal text-sm text-left font-[family-name:var(--font-geist-mono)]">
                       <li className="mb-2 tracking-[-.01em]">
