@@ -202,9 +202,23 @@ export default function Home() {
                             className="hidden"
                           />
                           {selectedFile1 ? (
-                            <span className="text-gray-900 dark:text-gray-100 overflow-hidden whitespace-nowrap text-ellipsis text-center">
-                              {selectedFile1.name}
-                            </span>
+                            <div className="relative w-full">
+                              <span className="text-gray-900 dark:text-gray-100 overflow-hidden whitespace-nowrap text-ellipsis block text-center">
+                                {selectedFile1.name}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSelectedFile1(null);
+                                  setShowGreenBox(false);
+                                }}
+                                className="absolute top-0 right-0 m-1 text-red-500 hover:text-red-700"
+                                aria-label="Datei entfernen"
+                              >
+                                X
+                              </button>
+                            </div>
                           ) : (
                             <span className="text-gray-500 dark:text-gray-300 text-center md:text-lg">
                               Add your <b className="font-semibold">first</b> audio file
@@ -232,9 +246,23 @@ export default function Home() {
                             className="hidden"
                           />
                           {selectedFile2 ? (
-                            <span className="text-gray-900 dark:text-gray-100 overflow-hidden whitespace-nowrap text-ellipsis text-center">
-                              {selectedFile2.name}
-                            </span>
+                            <div className="relative w-full">
+                              <span className="text-gray-900 dark:text-gray-100 overflow-hidden whitespace-nowrap text-ellipsis block text-center">
+                                {selectedFile2.name}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSelectedFile2(null);
+                                  setShowGreenBox(false);
+                                }}
+                                className="absolute top-0 right-0 m-1 text-red-500 hover:text-red-700"
+                                aria-label="Datei entfernen"
+                              >
+                                X
+                              </button>
+                            </div>
                           ) : (
                             <span className="text-gray-500 dark:text-gray-300 text-center md:text-lg">
                               Add your <b className="font-semibold">second</b> audio file
@@ -263,9 +291,23 @@ export default function Home() {
                           className="hidden"
                         />
                         {selectedFile1 ? (
-                          <span className="text-gray-900 dark:text-gray-100 overflow-hidden whitespace-nowrap text-ellipsis text-center">
-                            {selectedFile1.name}
-                          </span>
+                          <div className="relative w-full">
+                            <span className="text-gray-900 dark:text-gray-100 overflow-hidden whitespace-nowrap text-ellipsis block text-center">
+                              {selectedFile1.name}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedFile1(null);
+                                setShowGreenBox(false);
+                              }}
+                              className="absolute top-0 right-0 m-1 text-red-500 hover:text-red-700"
+                              aria-label="Datei entfernen"
+                            >
+                              X
+                            </button>
+                          </div>
                         ) : (
                           <span className="text-gray-500 dark:text-gray-300 text-center">
                             Add your audio file
