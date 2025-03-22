@@ -146,7 +146,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      {/* Logo außerhalb des Flex-Containers */}
+      {/* Logo */}
       <div className="flex justify-center md:justify-start">
         <Image
           className="dark:invert"
@@ -157,18 +157,20 @@ export default function Home() {
           priority
         />
       </div>
-      {/* Hauptbereich: Linke Spalte (blaue und grüne Box) und rechte Box (rote Border) */}
+      {/* Hauptbereich: Linke Spalte (blaue & grüne Box) und rechte Box (rote Border) */}
       <div className="flex flex-col md:flex-row gap-8 flex-grow md:items-stretch">
-        {/* Linke Spalte */}
-        <div className="w-full md:w-2/4 flex flex-col gap-8">
-          {/* Wrapper für beide Boxen */}
+        {/* Linke Spalte – feste Höhe, damit (blue + green + gap) gleich der rechten Box ist */}
+        <div className="w-full md:w-2/4 flex flex-col gap-8 h-[400px] lg:h-[550px] xl:h-[700px]">
           <div className="flex flex-col flex-grow">
             {/* Blaue Box */}
             <main className="w-full">
-              <div className="flex flex-col-reverse md:flex-row gap-1 md:items-stretch border border-blue-500">
+              <div
+                className="flex flex-col-reverse md:flex-row gap-1 md:items-stretch border border-blue-500
+                h-[250px] md:h-[300px] lg:h-[350px] xl:h-[400px]"
+              >
                 {/* Linke Spalte: Uploadfelder */}
                 <div className="w-full md:w-1/2">
-                  <div className="h-[200px] sm:h-[250px] md:h-[300px] lg:h-[350px] xl:h-[400px] w-full border border-dashed">
+                  <div className="h-full w-full border border-dashed">
                     {showSecondUpload ? (
                       <div className="flex flex-col h-full gap-2">
                         {/* Erstes Upload-Feld */}
@@ -286,7 +288,7 @@ export default function Home() {
                   </div>
                 </div>
                 {/* Rechte Spalte innerhalb der blauen Box: Statische Textbox */}
-                <div className="w-full md:w-1/2 h-[200px] sm:h-[250px] md:h-[300px] lg:h-[350px] xl:h-[400px] flex flex-col justify-between p-6 border bg-gray-50 dark:bg-gray-800">
+                <div className="w-full md:w-1/2 h-full flex flex-col justify-between p-6 border bg-gray-50 dark:bg-gray-800">
                   <div className="w-full">
                     <ol className="list-inside list-decimal text-sm text-left font-[family-name:var(--font-geist-mono)]">
                       <li className="mb-2 tracking-[-.01em]">
@@ -327,7 +329,7 @@ export default function Home() {
               </div>
             </main>
             {/* Grüne Box */}
-            <div className="w-full p-4 border border-green-500 bg-gray-50 dark:bg-gray-800 overflow-hidden lg:h-[200px] xl:h-[300px]">
+            <div className="w-full p-4 border border-green-500 bg-gray-50 dark:bg-gray-800 h-[150px] md:h-[100px] lg:h-[200px] xl:h-[300px]">
               <p className="text-center text-gray-700 dark:text-gray-300">
                 Hier kommt der Inhalt der zweiten Box.
               </p>
@@ -335,10 +337,21 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Rechte Box (rote Border) mit GitHub-Markdown-Styling */}
-        <aside className="w-full md:w-2/4 p-4 border border-red-500 bg-gray-100 dark:bg-gray-900 flex flex-col">
-          <div className="flex-1 overflow-y-auto min-h-0 markdown-body">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+        {/* Rechte Box (rote Border) – gleiche feste Höhe wie linke Spalte */}
+        <aside className="w-full md:w-2/4 p-4 border border-red-500 bg-gray-100 dark:bg-gray-900 flex flex-col h-[400px] lg:h-[550px] xl:h-[700px]">
+          <div className="flex-1 overflow-y-auto overflow-x-hidden min-h-0 markdown-body">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                img: ({ node, ...props }) => {
+                  const src =
+                    props.src && props.src.startsWith("http")
+                      ? props.src
+                      : `https://raw.githubusercontent.com/Mvb-DL/AudioWatermarking/main/${props.src}`;
+                  return <img {...props} src={src} style={{ maxWidth: "100%" }} alt={props.alt} />;
+                },
+              }}
+            >
               {markdownText}
             </ReactMarkdown>
           </div>
