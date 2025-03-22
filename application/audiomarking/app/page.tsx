@@ -1,6 +1,7 @@
 "use client";
-import React, { useState, useRef, ChangeEvent, DragEvent } from "react";
+import React, { useState, useRef, ChangeEvent, DragEvent, useEffect } from "react";
 import Image from "next/image";
+import ReactMarkdown from "react-markdown";
 
 export default function Home() {
   // Zustand für das zweite Upload-Feld
@@ -15,6 +16,17 @@ export default function Home() {
   const [selectedFile2, setSelectedFile2] = useState<File | null>(null);
   const [dragActive2, setDragActive2] = useState(false);
   const inputRef2 = useRef<HTMLInputElement>(null);
+
+  // Markdown-Zustand für die rechte Box
+  const [markdownText, setMarkdownText] = useState("");
+
+  // Markdown aus der externen Datei laden (im public-Ordner, z.B. /content.md)
+  useEffect(() => {
+    fetch("/content.md")
+      .then((res) => res.text())
+      .then((text) => setMarkdownText(text))
+      .catch((err) => console.error("Fehler beim Laden der Markdown-Datei:", err));
+  }, []);
 
   // Handler für Upload-Feld 1
   const handleDragOver1 = (e: DragEvent<HTMLDivElement>) => {
@@ -136,9 +148,9 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      {/* Hauptbereich: Bei md+ nebeneinander – items werden gestreckt */}
-      <div className="flex flex-col md:flex-row gap-8 md:items-stretch">
-        {/* Main-Element: nimmt 50 % der Breite auf md+ ein */}
+      {/* Hauptbereich mit flex-grow */}
+      <div className="flex flex-col md:flex-row gap-8 md:items-stretch flex-grow">
+        {/* Main-Element: Linke Spalte mit Upload und statischer Textbox */}
         <main className="w-full md:w-2/4 flex flex-col gap-8 border border-blue-500">
           {/* Logo */}
           <div className="flex justify-center md:justify-start">
@@ -151,9 +163,9 @@ export default function Home() {
               priority
             />
           </div>
-          {/* Inhalt: Auf sm untereinander, ab md nebeneinander */}
+          {/* Inhalt */}
           <div className="flex flex-col-reverse md:flex-row gap-1 md:items-stretch">
-            {/* Linke Spalte: Uploadfelder – volle Breite auf sm, ab md 50 % */}
+            {/* Linke Spalte: Uploadfelder */}
             <div className="w-full md:w-1/2">
               <div className={`${containerHeightClass} w-full border border-dashed`}>
                 {showSecondUpload ? (
@@ -272,7 +284,7 @@ export default function Home() {
                 )}
               </div>
             </div>
-            {/* Rechte Spalte: Textbox – volle Breite auf sm, ab md 50 %, mit gleicher Höhe */}
+            {/* Rechte Spalte innerhalb des Main-Elements: Statische Textbox */}
             <div className={`w-full md:w-1/2 ${containerHeightClass} flex flex-col justify-between p-6 border bg-gray-50 dark:bg-gray-800`}>
               <div className="w-full">
                 <ol className="list-inside list-decimal text-sm text-left font-[family-name:var(--font-geist-mono)]">
@@ -314,42 +326,11 @@ export default function Home() {
           </div>
         </main>
 
-        {/* Aside-Element: nimmt auf md+ ebenfalls 50 % der Breite ein */}
-        <aside className="w-full md:w-2/4 flex items-center justify-center p-4 border bg-gray-100 dark:bg-gray-900 border-red-500">
-          <p>This is the additional box on the right.</p>
+        {/* Rechte Box (Aside) mit Markdown-Inhalt */}
+        <aside className={`w-full md:w-2/4 ${containerHeightClass} p-4 border bg-gray-100 dark:bg-gray-900 border-red-500 overflow-y-auto`}>
+          <ReactMarkdown>{markdownText}</ReactMarkdown>
         </aside>
       </div>
-
-      {/* Footer: fixiert unten rechts */}
-      <footer className="fixed bottom-0 right-0 m-4 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image aria-hidden src="/file.svg" alt="File icon" width={16} height={16} />
-          How it works
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image aria-hidden src="/window.svg" alt="Window icon" width={16} height={16} />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image aria-hidden src="/globe.svg" alt="Globe icon" width={16} height={16} />
-          Mario von Bassen
-        </a>
-      </footer>
     </div>
   );
 }
