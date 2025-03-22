@@ -1,0 +1,172 @@
+from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
+import librosa
+import numpy as np
+from scipy.integrate import simpson
+import io
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import base64
+
+app = FastAPI()
+
+# CORS-Middleware hinzufügen
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Parameter
+N_SEGMENTS = 10
+X_MIN, X_MAX = 0, 2000  # Frequenzbereich in Hz
+
+# Definition der Segment-Node-Klasse
+class SegmentNode:
+    def __init__(self, index, seg_start, seg_end, usage_percent, actual_area):
+        self.index = index
+        self.seg_start = seg_start
+        self.seg_end = seg_end
+        self.usage_percent = usage_percent
+        self.actual_area = actual_area
+        self.prev = None
+        self.next = None
+
+    def to_dict(self):
+        return {
+            "index": self.index,
+            "seg_start": self.seg_start,
+            "seg_end": self.seg_end,
+            "usage_percent": self.usage_percent,
+            "actual_area": self.actual_area,
+            "prev": self.prev.index if self.prev else None,
+            "next": self.next.index if self.next else None
+        }
+
+def create_segment_linked_list(audio_bytes: bytes, n_segments, x_min=X_MIN, x_max=X_MAX):
+    y, sr = librosa.load(io.BytesIO(audio_bytes), sr=None)
+    fft_result = np.fft.rfft(y)
+    fft_magnitude = np.abs(fft_result)
+    frequencies = np.fft.rfftfreq(len(y), 1/sr)
+
+    box_width = (x_max - x_min) / n_segments
+    max_amplitude = np.max(fft_magnitude)
+    ideal_area = box_width * max_amplitude
+
+    head = None
+    prev_node = None
+    nodes = []
+
+    for i in range(n_segments):
+        seg_start = x_min + i * box_width
+        seg_end = seg_start + box_width
+        start_idx = np.searchsorted(frequencies, seg_start, side='left')
+        end_idx = np.searchsorted(frequencies, seg_end, side='left')
+        if end_idx > start_idx:
+            actual_area = simpson(y=fft_magnitude[start_idx:end_idx],
+                                  x=frequencies[start_idx:end_idx])
+        else:
+            actual_area = 0
+
+        usage_percent = (actual_area / ideal_area) * 100 if ideal_area != 0 else 0
+
+        node = SegmentNode(index=i, seg_start=seg_start, seg_end=seg_end,
+                           usage_percent=usage_percent, actual_area=actual_area)
+        if prev_node is not None:
+            prev_node.next = node
+            node.prev = prev_node
+        else:
+            head = node
+        prev_node = node
+        nodes.append(node)
+
+    return head, nodes
+
+@app.post("/fingerprint")
+async def fingerprint_plot(audio_file: UploadFile = File(...)):
+    try:
+        if not audio_file:
+            raise HTTPException(status_code=400, detail="Keine Datei erhalten")
+
+        audio_bytes = await audio_file.read()
+        _, nodes = create_segment_linked_list(audio_bytes, N_SEGMENTS, X_MIN, X_MAX)
+
+        # 3D-Plot erstellen
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+
+        xs = [node.seg_start for node in nodes]
+        ys = [node.seg_end for node in nodes]
+        zs = [node.actual_area for node in nodes]
+        sizes = [50 + node.usage_percent * 10 for node in nodes]
+
+        ax.scatter(xs, ys, zs, s=sizes, c='b', marker='o')
+        ax.set_xlabel("seg_start (Hz)")
+        ax.set_ylabel("seg_end (Hz)")
+        ax.set_zlabel("actual_area")
+        ax.set_title("Fingerprint 3D Plot")
+
+        # Bild in base64 umwandeln
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png')
+        buf.seek(0)
+        image_base64 = base64.b64encode(buf.read()).decode('utf-8')
+        plt.close(fig)
+
+        # Knoten als JSON-Daten
+        segments_json = [node.to_dict() for node in nodes]
+
+        return JSONResponse(content={"segments": segments_json, "image_base64": image_base64})
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/compare")
+async def compare_plot(audio1: UploadFile = File(...), audio2: UploadFile = File(...)):
+    try:
+        audio_bytes1 = await audio1.read()
+        audio_bytes2 = await audio2.read()
+
+        _, nodes1 = create_segment_linked_list(audio_bytes1, N_SEGMENTS, X_MIN, X_MAX)
+        _, nodes2 = create_segment_linked_list(audio_bytes2, N_SEGMENTS, X_MIN, X_MAX)
+
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+
+        # Fingerprint Audio 1
+        xs1 = [node.seg_start for node in nodes1]
+        ys1 = [node.seg_end for node in nodes1]
+        zs1 = [node.actual_area for node in nodes1]
+        sizes1 = [50 + node.usage_percent * 10 for node in nodes1]
+        ax.scatter(xs1, ys1, zs1, s=sizes1, c='b', marker='o', label="Audio 1")
+
+        # Fingerprint Audio 2
+        xs2 = [node.seg_start for node in nodes2]
+        ys2 = [node.seg_end for node in nodes2]
+        zs2 = [node.actual_area for node in nodes2]
+        sizes2 = [50 + node.usage_percent * 10 for node in nodes2]
+        ax.scatter(xs2, ys2, zs2, s=sizes2, c='r', marker='^', label="Audio 2")
+
+        ax.set_xlabel("seg_start (Hz)")
+        ax.set_ylabel("seg_end (Hz)")
+        ax.set_zlabel("actual_area")
+        ax.set_title("Compare 3D Plot")
+        ax.legend()
+
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png')
+        buf.seek(0)
+        plt.close(fig)
+
+        return JSONResponse(content={
+            "image_base64": base64.b64encode(buf.read()).decode('utf-8')
+        })
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=18080)
