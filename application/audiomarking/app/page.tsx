@@ -100,10 +100,9 @@ export default function Home() {
     inputRef2.current?.click();
   };
 
-  // API-Aufruf-Funktion: Ruft /fingerprinting oder /compare auf
+  // API-Aufruf-Funktion
   const handleSubmit = async () => {
     if (!showSecondUpload && selectedFile1) {
-      // Fingerprinting: Nur ein File vorhanden
       const formData = new FormData();
       formData.append("audio", selectedFile1);
       try {
@@ -116,7 +115,6 @@ export default function Home() {
         console.error(err);
       }
     } else if (showSecondUpload && selectedFile1 && selectedFile2) {
-      // Compare: Zwei Files vorhanden
       const formData = new FormData();
       formData.append("audio1", selectedFile1);
       formData.append("audio2", selectedFile2);
@@ -132,39 +130,102 @@ export default function Home() {
     }
   };
 
-  // Responsive Container-Höhen (Uploadfelder und Textbox – ohne Button)
+  // Definierte Höhe für beide Boxen – passt sich je nach Breakpoint an
   const containerHeightClass =
     "h-[200px] sm:h-[250px] md:h-[300px] lg:h-[350px] xl:h-[400px]";
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center">
-        {/* Logo */}
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-
-        {/* Container: Auf mobilen Geräten (flex-col-reverse) erscheint zuerst die Textbox,
-            ab md nebeneinander in der Originalreihenfolge (Uploadfeld links, Textbox rechts) */}
-        <div className="flex flex-col-reverse md:flex-row gap-1 items-start">
-          {/* Linke Spalte: Uploadfelder */}
-          <div className="flex flex-col">
-            {/* Auf kleinen Geräten erhält die linke Spalte (Uploadfelder) die gleiche Breite wie die Textbox */}
-            <div className={`w-64 md:w-[400px] lg:w-[450px] xl:w-[500px] ${containerHeightClass} border border-dashed`}>
-              {showSecondUpload ? (
-                <div className="flex flex-col h-full gap-2">
-                  {/* Erstes Upload-Feld */}
+    <div className="min-h-screen flex flex-col p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      {/* Hauptbereich: Bei md+ nebeneinander – items werden gestreckt */}
+      <div className="flex flex-col md:flex-row gap-8 md:items-stretch">
+        {/* Main-Element: nimmt 50 % der Breite auf md+ ein */}
+        <main className="w-full md:w-2/4 flex flex-col gap-8 border border-blue-500">
+          {/* Logo */}
+          <div className="flex justify-center md:justify-start">
+            <Image
+              className="dark:invert"
+              src="/next.svg"
+              alt="Next.js logo"
+              width={180}
+              height={38}
+              priority
+            />
+          </div>
+          {/* Inhalt: Auf sm untereinander, ab md nebeneinander */}
+          <div className="flex flex-col-reverse md:flex-row gap-1 md:items-stretch">
+            {/* Linke Spalte: Uploadfelder – volle Breite auf sm, ab md 50 % */}
+            <div className="w-full md:w-1/2">
+              <div className={`${containerHeightClass} w-full border border-dashed`}>
+                {showSecondUpload ? (
+                  <div className="flex flex-col h-full gap-2">
+                    {/* Erstes Upload-Feld */}
+                    <div
+                      onDragOver={handleDragOver1}
+                      onDragLeave={handleDragLeave1}
+                      onDrop={handleDrop1}
+                      onClick={handleClick1}
+                      className={`flex-1 flex items-center justify-center border border-dashed cursor-pointer ${
+                        dragActive1
+                          ? "bg-gray-200 dark:bg-gray-600"
+                          : "bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800"
+                      }`}
+                    >
+                      <input
+                        ref={inputRef1}
+                        id="audio-upload-1"
+                        type="file"
+                        accept="audio/*"
+                        onChange={handleChange1}
+                        className="hidden"
+                      />
+                      {selectedFile1 ? (
+                        <span className="text-gray-900 dark:text-gray-100 overflow-hidden whitespace-nowrap text-ellipsis text-center">
+                          {selectedFile1.name}
+                        </span>
+                      ) : (
+                        <span className="text-gray-500 dark:text-gray-300 text-center md:text-lg">
+                          Add your <b className="font-semibold">first</b> audio file
+                        </span>
+                      )}
+                    </div>
+                    {/* Zweites Upload-Feld */}
+                    <div
+                      onDragOver={handleDragOver2}
+                      onDragLeave={handleDragLeave2}
+                      onDrop={handleDrop2}
+                      onClick={handleClick2}
+                      className={`flex-1 flex items-center justify-center border border-dashed cursor-pointer ${
+                        dragActive2
+                          ? "bg-gray-200 dark:bg-gray-600"
+                          : "bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800"
+                      }`}
+                    >
+                      <input
+                        ref={inputRef2}
+                        id="audio-upload-2"
+                        type="file"
+                        accept="audio/*"
+                        onChange={handleChange2}
+                        className="hidden"
+                      />
+                      {selectedFile2 ? (
+                        <span className="text-gray-900 dark:text-gray-100 overflow-hidden whitespace-nowrap text-ellipsis text-center">
+                          {selectedFile2.name}
+                        </span>
+                      ) : (
+                        <span className="text-gray-500 dark:text-gray-300 text-center md:text-lg">
+                          Add your <b className="font-semibold">second</b> audio file
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ) : (
                   <div
                     onDragOver={handleDragOver1}
                     onDragLeave={handleDragLeave1}
                     onDrop={handleDrop1}
                     onClick={handleClick1}
-                    className={`flex-1 flex items-center justify-center border border-dashed cursor-pointer ${
+                    className={`h-full flex items-center justify-center border border-dashed cursor-pointer ${
                       dragActive1
                         ? "bg-gray-200 dark:bg-gray-600"
                         : "bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800"
@@ -183,140 +244,84 @@ export default function Home() {
                         {selectedFile1.name}
                       </span>
                     ) : (
-                      <span className="text-gray-500 dark:text-gray-300 text-center md:text-lg">
-                        Add your <b className="font-semibold">first</b> audio file 
+                      <span className="text-gray-500 dark:text-gray-300 text-center">
+                        Add your audio file
                       </span>
                     )}
                   </div>
-                  {/* Zweites Upload-Feld */}
-                  <div
-                    onDragOver={handleDragOver2}
-                    onDragLeave={handleDragLeave2}
-                    onDrop={handleDrop2}
-                    onClick={handleClick2}
-                    className={`flex-1 flex items-center justify-center border border-dashed cursor-pointer ${
-                      dragActive2
-                        ? "bg-gray-200 dark:bg-gray-600"
-                        : "bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800"
-                    }`}
+                )}
+              </div>
+              {/* Toggle-Button */}
+              <div className="mt-1 flex justify-start">
+                {showSecondUpload ? (
+                  <button
+                    onClick={() => setShowSecondUpload(false)}
+                    className="p-2 border border-gray-300 rounded-none text-sm md:text-md bg-white font-[family-name:var(--font-geist-mono)] cursor-pointer"
+                    aria-label="Zweites Upload-Feld entfernen"
                   >
-                    <input
-                      ref={inputRef2}
-                      id="audio-upload-2"
-                      type="file"
-                      accept="audio/*"
-                      onChange={handleChange2}
-                      className="hidden"
-                    />
-                    {selectedFile2 ? (
-                      <span className="text-gray-900 dark:text-gray-100 overflow-hidden whitespace-nowrap text-ellipsis text-center">
-                        {selectedFile2.name}
-                      </span>
-                    ) : (
-                      <span className="text-gray-500 dark:text-gray-300 text-center md:text-lg">
-                        Add your <b className="font-semibold">second</b> audio file 
-                      </span>
-                    )}
+                    Fingerprint Audiofile
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setShowSecondUpload(true)}
+                    className="p-2 border border-gray-300 rounded-none text-sm md:text-md bg-white font-[family-name:var(--font-geist-mono)] cursor-pointer"
+                    aria-label="Weiteres Upload-Feld hinzufügen"
+                  >
+                    Compare Audiofiles
+                  </button>
+                )}
+              </div>
+            </div>
+            {/* Rechte Spalte: Textbox – volle Breite auf sm, ab md 50 %, mit gleicher Höhe */}
+            <div className={`w-full md:w-1/2 ${containerHeightClass} flex flex-col justify-between p-6 border bg-gray-50 dark:bg-gray-800`}>
+              <div className="w-full">
+                <ol className="list-inside list-decimal text-sm text-left font-[family-name:var(--font-geist-mono)]">
+                  <li className="mb-2 tracking-[-.01em]">
+                    Get started by editing{" "}
+                    <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded-none font-semibold">
+                      app/page.tsx
+                    </code>
+                    .
+                  </li>
+                  <li className="tracking-[-.01em]">
+                    Save and see your changes instantly.
+                  </li>
+                </ol>
+              </div>
+              {(!showSecondUpload && selectedFile1) && (
+                <button
+                  onClick={handleSubmit}
+                  className="w-full border border-solid border-transparent transition-colors flex items-center bg-foreground text-background gap-2 whitespace-nowrap hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm h-10 px-4 rounded-none"
+                >
+                  <div className="flex items-center gap-2 w-full">
+                    <Image className="dark:invert" src="/vercel.svg" alt="Vercel logomark" width={20} height={20} />
+                    <span className="flex-1 text-center">Fingerprint</span>
                   </div>
-                </div>
-              ) : (
-                <div
-                  onDragOver={handleDragOver1}
-                  onDragLeave={handleDragLeave1}
-                  onDrop={handleDrop1}
-                  onClick={handleClick1}
-                  className={`h-full flex items-center justify-center border border-dashed cursor-pointer ${
-                    dragActive1
-                      ? "bg-gray-200 dark:bg-gray-600"
-                      : "bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800"
-                  }`}
-                >
-                  <input
-                    ref={inputRef1}
-                    id="audio-upload-1"
-                    type="file"
-                    accept="audio/*"
-                    onChange={handleChange1}
-                    className="hidden"
-                  />
-                  {selectedFile1 ? (
-                    <span className="text-gray-900 dark:text-gray-100 overflow-hidden whitespace-nowrap text-ellipsis text-center">
-                      {selectedFile1.name}
-                    </span>
-                  ) : (
-                    <span className="text-gray-500 dark:text-gray-300 text-center">
-                      Add your audio file
-                    </span>
-                  )}
-                </div>
-              )}
-            </div>
-            {/* Toggle-Button außerhalb des Upload-Containers */}
-            <div className="mt-1 flex justify-start">
-              {showSecondUpload ? (
-                <button
-                  onClick={() => setShowSecondUpload(false)}
-                  className="p-2 border border-gray-300 rounded-none text-sm md:text-md bg-white font-[family-name:var(--font-geist-mono)] cursor-pointer"
-                  aria-label="Zweites Upload-Feld entfernen"
-                >
-                  Fingerprint Audiofile
                 </button>
-              ) : (
+              )}
+              {(showSecondUpload && selectedFile1 && selectedFile2) && (
                 <button
-                  onClick={() => setShowSecondUpload(true)}
-                  className="p-2 border border-gray-300 rounded-none text-sm md:text-md bg-white font-[family-name:var(--font-geist-mono)] cursor-pointer"
-                  aria-label="Weiteres Upload-Feld hinzufügen"
+                  onClick={handleSubmit}
+                  className="w-full border border-solid border-transparent transition-colors flex items-center bg-foreground text-background gap-2 whitespace-nowrap hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm h-10 px-4 rounded-none"
                 >
-                  Compare Audiofiles
+                  <div className="flex items-center gap-2 w-full">
+                    <Image className="dark:invert" src="/vercel.svg" alt="Vercel logomark" width={20} height={20} />
+                    <span className="flex-1 text-center">Compare</span>
+                  </div>
                 </button>
               )}
             </div>
           </div>
+        </main>
 
-          {/* Rechte Spalte: Textbox/Tutorial-Box – gleiche Breite (w-64) */}
-          <div className={`w-64 ${containerHeightClass} flex flex-col justify-between p-6 border bg-gray-50 dark:bg-gray-800`}>
-            <div className="w-full">
-              <ol className="list-inside list-decimal text-sm text-left font-[family-name:var(--font-geist-mono)]">
-                <li className="mb-2 tracking-[-.01em]">
-                  Get started by editing{" "}
-                  <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded-none font-semibold">
-                    app/page.tsx
-                  </code>
-                  .
-                </li>
-                <li className="tracking-[-.01em]">Save and see your changes instantly.</li>
-              </ol>
-            </div>
-            {/* Button: Wird nur angezeigt, wenn:
-                - Fingerprinting: Kein zweites Upload-Feld (showSecondUpload === false) und ein Audio-File hochgeladen
-                - Compare: Plus wurde geklickt (showSecondUpload === true) und beide Audio-Files hochgeladen */}
-            {!showSecondUpload && selectedFile1 && (
-              <button
-                onClick={handleSubmit}
-                className="w-full border border-solid border-transparent transition-colors flex items-center bg-foreground text-background gap-2 whitespace-nowrap hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm h-10 px-4 rounded-none"
-              >
-                <div className="flex items-center gap-2 w-full">
-                  <Image className="dark:invert" src="/vercel.svg" alt="Vercel logomark" width={20} height={20} />
-                  <span className="flex-1 text-center">Fingerprint</span>
-                </div>
-              </button>
-            )}
-            {showSecondUpload && selectedFile1 && selectedFile2 && (
-              <button
-                onClick={handleSubmit}
-                className="w-full border border-solid border-transparent transition-colors flex items-center bg-foreground text-background gap-2 whitespace-nowrap hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm h-10 px-4 rounded-none"
-              >
-                <div className="flex items-center gap-2 w-full">
-                  <Image className="dark:invert" src="/vercel.svg" alt="Vercel logomark" width={20} height={20} />
-                  <span className="flex-1 text-center">Compare</span>
-                </div>
-              </button>
-            )}
-          </div>
-        </div>
-      </main>
+        {/* Aside-Element: nimmt auf md+ ebenfalls 50 % der Breite ein */}
+        <aside className="w-full md:w-2/4 flex items-center justify-center p-4 border bg-gray-100 dark:bg-gray-900 border-red-500">
+          <p>This is the additional box on the right.</p>
+        </aside>
+      </div>
 
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
+      {/* Footer: fixiert unten rechts */}
+      <footer className="fixed bottom-0 right-0 m-4 flex gap-6 flex-wrap items-center justify-center">
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
           href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
