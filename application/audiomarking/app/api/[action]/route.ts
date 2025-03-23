@@ -50,7 +50,6 @@ export async function POST(
       );
     }
 
-    // Anfrage an den Python-Microservice senden
     const microserviceResponse = await fetch(
       microserviceURL + microserviceEndpoint,
       {
@@ -60,7 +59,6 @@ export async function POST(
     );
 
     const msData = await microserviceResponse.json();
-    console.log("📦 JSON-Response vom Microservice:", msData);
 
     return NextResponse.json(msData, {
       status: microserviceResponse.status,

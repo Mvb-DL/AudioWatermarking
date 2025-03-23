@@ -51,5 +51,5 @@ export default function Plotly3D({ segments }: { segments: SegmentNode[] }) {
     
   }, [segments]);
 
-  return <div ref={plotRef} className="w-full h-full" />;
+  return <div ref={plotRef} className="w-full h-full " />;
 }

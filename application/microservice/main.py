@@ -18,7 +18,7 @@ app.add_middleware(
 )
 
 # Parameter
-N_SEGMENTS = 10
+N_SEGMENTS = 100
 X_MIN, X_MAX = 0, 2000  # Frequenzbereich in Hz
 
 # Segment-Node-Klasse
