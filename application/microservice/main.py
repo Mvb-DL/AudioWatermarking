@@ -5,7 +5,7 @@ import librosa
 import numpy as np
 from scipy.integrate import simpson
 import io
-import json
+import os
 
 app = FastAPI()
 
@@ -22,6 +22,31 @@ app.add_middleware(
 N_SEGMENTS = 100          # Für den /fingerprint Endpunkt
 N_SEGMENTS_COMPARE = 100   # Für den /compare Endpunkt
 X_MIN, X_MAX = 0, 2000     # Frequenzbereich in Hz
+
+# Sicherheitsparameter
+ALLOWED_EXTENSIONS = {".wav", ".mp3", ".ogg"}
+ALLOWED_MIME_TYPES = {"audio/wav", "audio/x-wav", "audio/mpeg", "audio/ogg"}
+MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB
+
+def validate_audio_file(uploaded_file: UploadFile, audio_bytes: bytes):
+    """
+    Validiert, ob die hochgeladene Datei den Sicherheitsrichtlinien entspricht.
+    """
+    # Prüfe Dateiendung
+    filename = uploaded_file.filename
+    extension = os.path.splitext(filename)[1].lower()
+    if extension not in ALLOWED_EXTENSIONS:
+        raise HTTPException(status_code=400, detail="Ungültige Dateierweiterung")
+
+    # Prüfe MIME-Type
+    if uploaded_file.content_type not in ALLOWED_MIME_TYPES:
+        raise HTTPException(status_code=400, detail="Ungültiger MIME-Type")
+
+    # Prüfe Dateigröße
+    if len(audio_bytes) > MAX_FILE_SIZE:
+        raise HTTPException(status_code=400, detail="Dateigröße überschreitet das Limit von 10 MB")
+    
+    return True
 
 # Segment-Node-Klasse (wird in beiden Endpunkten verwendet)
 class SegmentNode:
@@ -118,19 +143,29 @@ async def fingerprint_data(audio_file: UploadFile = File(...)):
         if not audio_file:
             raise HTTPException(status_code=400, detail="Keine Datei erhalten")
         audio_bytes = await audio_file.read()
+
+        # Validierung des Inputs
+        validate_audio_file(audio_file, audio_bytes)
+
         head, nodes = create_segment_linked_list(io.BytesIO(audio_bytes), N_SEGMENTS, X_MIN, X_MAX)
         segments_json = [node.to_dict() for node in nodes]
         return JSONResponse(content={"segments": segments_json})
+    except HTTPException as he:
+        raise he
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# Neuer /compare Endpoint: Erzeugt für beide Audiofiles jeweils den Fingerprint mit lokaler Skalierung.
+# /compare Endpoint: Erzeugt für beide Audiofiles jeweils den Fingerprint mit lokaler Skalierung.
 @app.post("/compare")
 async def compare_data(audio1: UploadFile = File(...), audio2: UploadFile = File(...)):
     try:
         audio_bytes1 = await audio1.read()
         audio_bytes2 = await audio2.read()
-        
+
+        # Validierung der beiden Inputs
+        validate_audio_file(audio1, audio_bytes1)
+        validate_audio_file(audio2, audio_bytes2)
+
         # Fingerprints mit lokaler Skalierung (global_max_amp=None)
         _, nodes_local1 = create_segment_linked_list(io.BytesIO(audio_bytes1), N_SEGMENTS_COMPARE, X_MIN, X_MAX, global_max_amp=None)
         _, nodes_local2 = create_segment_linked_list(io.BytesIO(audio_bytes2), N_SEGMENTS_COMPARE, X_MIN, X_MAX, global_max_amp=None)
@@ -152,6 +187,8 @@ async def compare_data(audio1: UploadFile = File(...), audio2: UploadFile = File
         }
         
         return JSONResponse(content=response_data)
+    except HTTPException as he:
+        raise he
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

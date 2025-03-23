@@ -63,13 +63,6 @@ export async function POST(
 
     const msData = await microserviceResponse.json();
 
-    // Bei "compare" wird der komplette Response (die beiden JSONs) ausgegeben
-    if (action === "compare") {
-      console.log("Response vom Python-Microservice (compare):", msData);
-    } else {
-      console.log("Response vom Python-Microservice (fingerprint):", msData);
-    }
-
     return NextResponse.json(msData, {
       status: microserviceResponse.status,
       headers: {

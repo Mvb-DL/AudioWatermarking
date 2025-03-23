@@ -1,6 +1,13 @@
 "use client";
-import React, { useState, useRef, useEffect, ChangeEvent, DragEvent } from "react";
-import Image from "next/image";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  ChangeEvent,
+  DragEvent,
+  useCallback,
+} from "react";
+import { Progress } from "@/components/ui/progress";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import "github-markdown-css/github-markdown.css";
@@ -10,10 +17,69 @@ import dynamic from "next/dynamic";
 const Plotly3D = dynamic(() => import("@/app/components/Plotly3D"), {
   ssr: false,
 });
-const ComparePlotly3D = dynamic(
-  () => import("@/app/components/Compare"),
-  { ssr: false }
-);
+const ComparePlotly3D = dynamic(() => import("@/app/components/Compare"), {
+  ssr: false,
+});
+
+// Typdefinitionen für die Props der Wrapper-Komponenten
+interface Plotly3DWrapperProps {
+  segments: any;
+  onLoaded: () => void;
+}
+
+interface ComparePlotly3DWrapperProps {
+  segments1: any;
+  segments2: any;
+  onLoaded: () => void;
+}
+
+// Wrapper für Plotly3D, um den Ladevorgang zu signalisieren
+function Plotly3DWrapper({ segments, onLoaded }: Plotly3DWrapperProps) {
+  useEffect(() => {
+    // Simuliere, dass die Komponente nach dem Mounting "geladen" ist
+    onLoaded();
+  }, [onLoaded]);
+  return <Plotly3D segments={segments} />;
+}
+
+// Angepasster Wrapper für ComparePlotly3D:
+// Rendert die 3D-Komponente nur, wenn beide Segmente vorhanden sind.
+function ComparePlotly3DWrapper({
+  segments1,
+  segments2,
+  onLoaded,
+}: ComparePlotly3DWrapperProps) {
+  useEffect(() => {
+    if (segments1 && segments2) {
+      onLoaded();
+    }
+  }, [segments1, segments2, onLoaded]);
+
+  if (!segments1 || !segments2) {
+    return null;
+  }
+  return <ComparePlotly3D segments1={segments1} segments2={segments2} />;
+}
+
+// Dynamische Progress-Komponente
+function LoadingProgress() {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          return 100;
+        }
+        return prev + 1; // Erhöhe den Wert schrittweise (anpassbar)
+      });
+    }, 50); // Aktualisierung alle 50ms (anpassbar)
+    return () => clearInterval(interval);
+  }, []);
+
+  return <Progress className="w-3/4" value={progress} />;
+}
 
 export default function Home() {
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
@@ -29,6 +95,8 @@ export default function Home() {
   // Bei fingerprint erwarten wir ein Array, bei compare ein Objekt mit den Keys "audio1" und "audio2"
   const [segmentData, setSegmentData] = useState<any>(null);
   const [markdownText, setMarkdownText] = useState("");
+  // State, um den Ladevorgang des 3D-Modells (und der dazugehörigen Box) zu tracken
+  const [is3DLoaded, setIs3DLoaded] = useState(false);
 
   useEffect(() => {
     if (alertMessage) {
@@ -41,14 +109,23 @@ export default function Home() {
   }, [alertMessage]);
 
   useEffect(() => {
-    fetch("https://raw.githubusercontent.com/Mvb-DL/AudioWatermarking/main/README.md")
+    fetch(
+      "https://raw.githubusercontent.com/Mvb-DL/AudioWatermarking/main/README.md"
+    )
       .then((res) => res.text())
       .then((text) => setMarkdownText(text))
-      .catch((err) => console.error("Fehler beim Laden der Markdown-Datei:", err));
+      .catch((err) =>
+        console.error("Fehler beim Laden der Markdown-Datei:", err)
+      );
   }, []);
 
   const validateAudioFile = (file: File): boolean => {
-    const allowedMimeTypes = ["audio/mpeg", "audio/wav", "audio/ogg", "audio/flac"];
+    const allowedMimeTypes = [
+      "audio/mpeg",
+      "audio/wav",
+      "audio/ogg",
+      "audio/flac",
+    ];
     const allowedExtensions = [".mp3", ".wav", ".ogg", ".flac"];
     if (!allowedMimeTypes.includes(file.type)) return false;
     const fileName = file.name.toLowerCase();
@@ -78,7 +155,9 @@ export default function Home() {
       if (validateAudioFile(file)) {
         setSelectedFile1(file);
       } else {
-        setAlertMessage("Bitte nur gültige Audiodateien hochladen und maximale Dateigröße von 10MB beachten.");
+        setAlertMessage(
+          "Bitte nur gültige Audiodateien hochladen und maximale Dateigröße von 10MB beachten."
+        );
         setAlertType("error");
       }
     }
@@ -89,7 +168,9 @@ export default function Home() {
       if (validateAudioFile(file)) {
         setSelectedFile1(file);
       } else {
-        setAlertMessage("Bitte nur gültige Audiodateien hochladen und maximale Dateigröße von 10MB beachten.");
+        setAlertMessage(
+          "Bitte nur gültige Audiodateien hochladen und maximale Dateigröße von 10MB beachten."
+        );
         setAlertType("error");
       }
     }
@@ -118,7 +199,9 @@ export default function Home() {
       if (validateAudioFile(file)) {
         setSelectedFile2(file);
       } else {
-        setAlertMessage("Bitte nur gültige Audiodateien hochladen und maximale Dateigröße von 10MB beachten.");
+        setAlertMessage(
+          "Bitte nur gültige Audiodateien hochladen und maximale Dateigröße von 10MB beachten."
+        );
         setAlertType("error");
       }
     }
@@ -129,7 +212,9 @@ export default function Home() {
       if (validateAudioFile(file)) {
         setSelectedFile2(file);
       } else {
-        setAlertMessage("Bitte nur gültige Audiodateien hochladen und maximale Dateigröße von 10MB beachten.");
+        setAlertMessage(
+          "Bitte nur gültige Audiodateien hochladen und maximale Dateigröße von 10MB beachten."
+        );
         setAlertType("error");
       }
     }
@@ -175,6 +260,8 @@ export default function Home() {
   };
 
   const handleSubmit = async () => {
+    // Reset des 3D-Ladezustandes vor jedem neuen API-Aufruf
+    setIs3DLoaded(false);
     setShowGreenBox(true);
     if (!showSecondUpload && selectedFile1) {
       const formData = new FormData();
@@ -205,7 +292,6 @@ export default function Home() {
         });
         const data = await res.json();
         console.log("📦 Microservice Response (compare):", data);
-        // Hier erwarten wir zwei JSON-Arrays unter "audio1" und "audio2" sowie zusätzliche Vergleichswerte
         setSegmentData(data);
         setAlertMessage("Vergleich erfolgreich!");
         setAlertType("success");
@@ -217,35 +303,42 @@ export default function Home() {
     }
   };
 
-  const resetState = () => {
-    setSelectedFile1(null);
-    setSelectedFile2(null);
-    setShowGreenBox(false);
-    setSegmentData(null);
-    setDragActive1(false);
-    setDragActive2(false);
-    setShowSecondUpload(false);
-  };
+  // Callback, um den Ladevorgang der 3D-Komponente zu signalisieren
+  const handle3DLoaded = useCallback(() => {
+    setIs3DLoaded(true);
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col p-4 pb-20 gap-16 sm:p-10">
       {alertMessage && (
         <div className="fixed top-4 right-4 z-50">
-          <div className={`px-4 py-2 rounded shadow-lg ${alertType === "error" ? "bg-red-500 text-white" : "bg-green-500 text-white"}`}>
+          <div
+            className={`px-4 py-2 rounded shadow-lg ${
+              alertType === "error"
+                ? "bg-red-500 text-white"
+                : "bg-green-500 text-white"
+            }`}
+          >
             {alertMessage}
-            <button onClick={() => { setAlertMessage(null); setAlertType(null); }} className="ml-2 text-xl font-bold">
+            <button
+              onClick={() => {
+                setAlertMessage(null);
+                setAlertType(null);
+              }}
+              className="ml-2 text-xl font-bold"
+            >
               ×
             </button>
           </div>
         </div>
       )}
-      <div className="flex justify-center md:justify-start">
-        <Image className="dark:invert" src="/next.svg" alt="Next.js logo" width={180} height={38} priority />
+      <div className="flex justify-center md:justify-start ">
+        <h1 className="text-3xl font-bold">Audio Watermarking</h1>
       </div>
       <div className="flex flex-col md:flex-row gap-8 flex-grow md:items-stretch">
-        <div className="w-full md:w-2/4 flex flex-col gap-4 min-h-[400px] lg:h-[550px] xl:h-[800px] border border-green-500">
+        <div className="w-full md:w-2/4 flex flex-col gap-4 min-h-[400px] lg:h-[550px] xl:h-[800px]">
           <div className="flex flex-col flex-grow ">
-            <main className="w-full border border-yellow-500">
+            <main className="w-full">
               <div className="flex flex-col-reverse md:flex-row gap-1 md:items-stretch h-[450px] md:h-[300px] lg:h-[350px] xl:h-[400px]">
                 <div className="w-full md:w-1/2 flex-1">
                   <div className="h-full w-full border border-dashed">
@@ -256,15 +349,38 @@ export default function Home() {
                           onDragLeave={handleDragLeave1}
                           onDrop={handleDrop1}
                           onClick={handleClick1}
-                          className={`flex-1 flex items-center justify-center border border-dashed cursor-pointer ${dragActive1 ? "bg-gray-200" : "bg-gray-50 hover:bg-gray-100"}`}
+                          className={`flex-1 flex items-center justify-center border border-dashed cursor-pointer ${
+                            dragActive1
+                              ? "bg-gray-200"
+                              : "bg-gray-50 hover:bg-gray-100"
+                          }`}
                         >
-                          <input ref={inputRef1} id="audio-upload-1" type="file" accept="audio/*" onChange={handleChange1} className="hidden" />
+                          <input
+                            ref={inputRef1}
+                            id="audio-upload-1"
+                            type="file"
+                            accept="audio/*"
+                            onChange={handleChange1}
+                            className="hidden"
+                          />
                           {selectedFile1 ? (
                             <div className="relative w-full">
                               <span className="text-gray-900 overflow-hidden whitespace-nowrap text-ellipsis block text-center">
                                 {selectedFile1.name}
                               </span>
-                              <button type="button" onClick={(e) => { e.stopPropagation(); resetState(); }} className="absolute top-0 right-2 m-1 text-xl text-red-500" aria-label="Datei entfernen">
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  // Löscht den Input, setzt den Selected-File-Zustand zurück
+                                  if (inputRef1.current) inputRef1.current.value = "";
+                                  setSelectedFile1(null);
+                                  // Blendet die Greenbox aus
+                                  setShowGreenBox(false);
+                                }}
+                                className="absolute top-0 right-2 m-1 text-xl text-red-500"
+                                aria-label="Datei entfernen"
+                              >
                                 X
                               </button>
                             </div>
@@ -279,15 +395,36 @@ export default function Home() {
                           onDragLeave={handleDragLeave2}
                           onDrop={handleDrop2}
                           onClick={handleClick2}
-                          className={`flex-1 flex items-center justify-center border border-dashed cursor-pointer ${dragActive2 ? "bg-gray-200" : "bg-gray-50 hover:bg-gray-100"}`}
+                          className={`flex-1 flex items-center justify-center border border-dashed cursor-pointer ${
+                            dragActive2
+                              ? "bg-gray-200"
+                              : "bg-gray-50 hover:bg-gray-100"
+                          }`}
                         >
-                          <input ref={inputRef2} id="audio-upload-2" type="file" accept="audio/*" onChange={handleChange2} className="hidden" />
+                          <input
+                            ref={inputRef2}
+                            id="audio-upload-2"
+                            type="file"
+                            accept="audio/*"
+                            onChange={handleChange2}
+                            className="hidden"
+                          />
                           {selectedFile2 ? (
                             <div className="relative w-full">
                               <span className="text-gray-900 overflow-hidden whitespace-nowrap text-ellipsis block text-center">
                                 {selectedFile2.name}
                               </span>
-                              <button type="button" onClick={(e) => { e.stopPropagation(); resetState(); }} className="absolute top-0 right-2 m-1 text-xl text-red-500" aria-label="Datei entfernen">
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  if (inputRef2.current) inputRef2.current.value = "";
+                                  setSelectedFile2(null);
+                                  setShowGreenBox(false);
+                                }}
+                                className="absolute top-0 right-2 m-1 text-xl text-red-500"
+                                aria-label="Datei entfernen"
+                              >
                                 X
                               </button>
                             </div>
@@ -304,15 +441,36 @@ export default function Home() {
                         onDragLeave={handleDragLeave1}
                         onDrop={handleDrop1}
                         onClick={handleClick1}
-                        className={`h-full flex items-center justify-center border border-dashed cursor-pointer ${dragActive1 ? "bg-gray-200" : "bg-gray-50 hover:bg-gray-100"}`}
+                        className={`h-full flex items-center justify-center border border-dashed cursor-pointer ${
+                          dragActive1
+                            ? "bg-gray-200"
+                            : "bg-gray-50 hover:bg-gray-100"
+                        }`}
                       >
-                        <input ref={inputRef1} id="audio-upload-1" type="file" accept="audio/*" onChange={handleChange1} className="hidden" />
+                        <input
+                          ref={inputRef1}
+                          id="audio-upload-1"
+                          type="file"
+                          accept="audio/*"
+                          onChange={handleChange1}
+                          className="hidden"
+                        />
                         {selectedFile1 ? (
                           <div className="relative w-full">
                             <span className="text-gray-900 overflow-hidden whitespace-nowrap text-ellipsis block text-center">
                               {selectedFile1.name}
                             </span>
-                            <button type="button" onClick={(e) => { e.stopPropagation(); resetState(); }} className="absolute top-0 right-2 m-1 text-xl text-red-500" aria-label="Datei entfernen">
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (inputRef1.current) inputRef1.current.value = "";
+                                setSelectedFile1(null);
+                                setShowGreenBox(false);
+                              }}
+                              className="absolute top-0 right-2 m-1 text-xl text-red-500"
+                              aria-label="Datei entfernen"
+                            >
                               X
                             </button>
                           </div>
@@ -327,11 +485,17 @@ export default function Home() {
                   {!showGreenBox && (
                     <div className="mt-1 flex justify-start">
                       {showSecondUpload ? (
-                        <button onClick={() => setShowSecondUpload(false)} className="p-2 border border-gray-300 text-sm bg-white cursor-pointer">
+                        <button
+                          onClick={() => setShowSecondUpload(false)}
+                          className="p-2 border border-gray-300 text-sm bg-white cursor-pointer"
+                        >
                           Fingerprint Audiofile
                         </button>
                       ) : (
-                        <button onClick={() => setShowSecondUpload(true)} className="p-2 border border-gray-300 text-sm bg-white cursor-pointer">
+                        <button
+                          onClick={() => setShowSecondUpload(true)}
+                          className="p-2 border border-gray-300 text-sm bg-white cursor-pointer"
+                        >
                           Compare Audiofiles
                         </button>
                       )}
@@ -348,13 +512,22 @@ export default function Home() {
                       <li>Downloade das Ergebnis.</li>
                     </ol>
                   </div>
-                  {(!showSecondUpload && selectedFile1) && (
-                    <button onClick={handleSubmit} className="w-1/2 mt-4 border bg-foreground text-background h-10 rounded-none">
+                  {(!showGreenBox && !showSecondUpload && selectedFile1) && (
+                    <button
+                      onClick={handleSubmit}
+                      className="w-1/2 mt-4 border bg-foreground text-background h-10 rounded-none"
+                    >
                       Erstelle Fingerprint
                     </button>
                   )}
-                  {(showSecondUpload && selectedFile1 && selectedFile2) && (
-                    <button onClick={handleSubmit} className="w-2/3 mt-4 border bg-foreground text-background h-10 rounded-none">
+                  {(!showGreenBox &&
+                    showSecondUpload &&
+                    selectedFile1 &&
+                    selectedFile2) && (
+                    <button
+                      onClick={handleSubmit}
+                      className="w-2/3 mt-4 border bg-foreground text-background h-10 rounded-none"
+                    >
                       Audiofiles vergleichen
                     </button>
                   )}
@@ -362,88 +535,93 @@ export default function Home() {
               </div>
             </main>
             {showGreenBox && (
-  <div
-    className={`w-full mt-5 bg-gray-50 border min-h-[200px] lg:h-[380px] flex flex-col md:flex-row gap-2 ${
-      segmentData &&
-      segmentData.weighted_avg_deviation !== undefined &&
-      segmentData.weighted_std_deviation !== undefined &&
-      segmentData.weighted_avg_deviation.toFixed(2) ===
-        segmentData.weighted_std_deviation.toFixed(2)
-        ? "border-red-500"
-        : "border-gray-300"
-    }`}
-  >
-    {segmentData ? (
-      showSecondUpload ? (
-        // Compare-Zweig
-        <div className="w-full h-full">
-          <ComparePlotly3D
-            segments1={segmentData.audio1}
-            segments2={segmentData.audio2}
-          />
-          <div className="mt-2 p-2 border rounded flex">
-            {/* Linke Box: Werte */}
-            <div className="w-1/2">
-              <p>
-                <strong>Weighted Avg Deviation:</strong>{" "}
-                {segmentData?.weighted_avg_deviation !== undefined
-                  ? segmentData.weighted_avg_deviation.toFixed(2)
-                  : "N/A"}
-              </p>
-              <p>
-                <strong>Weighted Std Deviation:</strong>{" "}
-                {segmentData?.weighted_std_deviation !== undefined
-                  ? segmentData.weighted_std_deviation.toFixed(2)
-                  : "N/A"}
-              </p>
-            </div>
-            {/* Rechte Box: Zusätzlicher Text */}
-            <div className="w-1/2 flex items-center justify-end">
-              <p>
-                Die Audiofiles weichen{" "}
-                {segmentData?.weighted_avg_deviation !== undefined
-                  ? <b>{segmentData.weighted_avg_deviation.toFixed(2)}%</b>
-                  : "N/A"}{" "}
-                voneinander ab.
-              </p>
-            </div>
-          </div>
-        </div>
-      ) : (
-        // Fingerprint-Zweig
-        <>
-  {/* Linke Box: Text und Button */}
-  <div className="w-full md:w-1/3 flex flex-col justify-between p-4 md:p-8 bg-white dark:bg-gray-900 rounded shadow">
-    <p className="text-sm text-gray-800 dark:text-gray-200">
-      Hier rechts siehst du dein Audiofile, wie es in einem 3D Raum aussieht.
-    </p>
-    <div className="mt-4 lg:mt-2">
-      <button
-        onClick={downloadJSON}
-        className="px-4 py-3 bg-black text-white rounded-none hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm cursor-pointer"
-      >
-        Fingerprint herunterladen
-      </button>
-    </div>
-  </div>
-  {/* Rechte Box: Plotly 3D */}
-  <div className="w-full md:w-2/3 h-full">
-    <Plotly3D segments={segmentData} />
-  </div>
-</>
-
-      )
-    ) : (
-      <p className="text-start text-gray-700 w-full p-2">
-        {showSecondUpload
-          ? "Vergleich wird erstellt..."
-          : "Erstellung Fingerprint..."}
-      </p>
-    )}
-  </div>
-)}
-
-
+              <div
+                className={`relative w-full mt-5 bg-gray-50 border min-h-[200px] lg:h-[380px] flex flex-col md:flex-row gap-2 ${
+                  segmentData &&
+                  segmentData.weighted_avg_deviation !== undefined &&
+                  segmentData.weighted_std_deviation !== undefined &&
+                  segmentData.weighted_avg_deviation.toFixed(2) ===
+                    segmentData.weighted_std_deviation.toFixed(2)
+                    ? "border-red-500"
+                    : "border-gray-300"
+                }`}
+              >
+                {segmentData ? (
+                  showSecondUpload ? (
+                    // Compare-Zweig
+                    <div className="w-full h-full">
+                      <ComparePlotly3DWrapper
+                        segments1={segmentData.audio1}
+                        segments2={segmentData.audio2}
+                        onLoaded={handle3DLoaded}
+                      />
+                      <div className="mt-2 p-2 border rounded-none flex">
+                        <div className="w-1/2">
+                          <p>
+                            <strong>Weighted Avg Deviation:</strong>{" "}
+                            {segmentData?.weighted_avg_deviation !== undefined
+                              ? segmentData.weighted_avg_deviation.toFixed(2)
+                              : "N/A"}
+                          </p>
+                          <p>
+                            <strong>Weighted Std Deviation:</strong>{" "}
+                            {segmentData?.weighted_std_deviation !== undefined
+                              ? segmentData.weighted_std_deviation.toFixed(2)
+                              : "N/A"}
+                          </p>
+                        </div>
+                        <div className="w-1/2 flex items-center justify-end">
+                          <p>
+                            Die Audiofiles weichen{" "}
+                            {segmentData?.weighted_avg_deviation !== undefined ? (
+                              <b>
+                                {segmentData.weighted_avg_deviation.toFixed(2)}%
+                              </b>
+                            ) : (
+                              "N/A"
+                            )}{" "}
+                            voneinander ab.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    // Fingerprint-Zweig
+                    <>
+                      <div className="w-full md:w-1/3 flex flex-col justify-between p-4 md:p-8 bg-white dark:bg-gray-900 rounded-none shadow">
+                        <p className="text-sm text-gray-800 dark:text-gray-200">
+                          Hier rechts siehst du dein Audiofile, wie es in einem 3D Raum
+                          aussieht.
+                        </p>
+                        <div className="mt-4 lg:mt-2">
+                          <button
+                            onClick={downloadJSON}
+                            className="px-4 py-3 bg-black text-white rounded-none hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm cursor-pointer"
+                          >
+                            Fingerprint herunterladen
+                          </button>
+                        </div>
+                      </div>
+                      <div className="w-full md:w-2/3 h-full">
+                        <Plotly3DWrapper
+                          segments={segmentData}
+                          onLoaded={handle3DLoaded}
+                        />
+                      </div>
+                    </>
+                  )
+                ) : (
+                  // Falls segmentData noch nicht vorhanden ist, zeigen wir ein leeres Feld
+                  <div className="w-full h-full"></div>
+                )}
+                {/* Overlay mit Progress Bar, solange segmentData nicht vorhanden oder 3D-Komponente noch nicht geladen */}
+                {(!segmentData || !is3DLoaded) && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-gray-50 z-10">
+                    <LoadingProgress />
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
         <aside className="w-full md:w-2/4 p-4 bg-white dark:bg-black flex flex-col h-[500px] lg:h-[550px] xl:h-[800px] mt-10">
