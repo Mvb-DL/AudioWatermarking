@@ -26,12 +26,16 @@ export async function POST(
       const msFormData = new FormData();
       msFormData.append("audio_file", file);
       bodyToSend = msFormData;
-
     } else if (action === "compare") {
       microserviceEndpoint = "/compare";
       const file1 = formData.get("audio1");
       const file2 = formData.get("audio2");
-      if (!file1 || !file2 || typeof file1 === "string" || typeof file2 === "string") {
+      if (
+        !file1 ||
+        !file2 ||
+        typeof file1 === "string" ||
+        typeof file2 === "string"
+      ) {
         return NextResponse.json(
           { error: "Beide Audiofiles müssen gesendet werden" },
           { status: 400 }
@@ -42,7 +46,6 @@ export async function POST(
       msFormData.append("audio1", file1);
       msFormData.append("audio2", file2);
       bodyToSend = msFormData;
-
     } else {
       return NextResponse.json(
         { error: "Endpoint nicht gefunden" },
@@ -60,13 +63,19 @@ export async function POST(
 
     const msData = await microserviceResponse.json();
 
+    // Bei "compare" wird der komplette Response (die beiden JSONs) ausgegeben
+    if (action === "compare") {
+      console.log("Response vom Python-Microservice (compare):", msData);
+    } else {
+      console.log("Response vom Python-Microservice (fingerprint):", msData);
+    }
+
     return NextResponse.json(msData, {
       status: microserviceResponse.status,
       headers: {
         "X-From-Python-Microservice": "true",
       },
     });
-
   } catch (error) {
     console.error("❌ Fehler in der API-Route:", error);
     return NextResponse.json(
