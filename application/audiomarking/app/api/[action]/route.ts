@@ -22,6 +22,7 @@ export async function POST(
           { status: 400 }
         );
       }
+
       const msFormData = new FormData();
       msFormData.append("audio_file", file);
       bodyToSend = msFormData;
@@ -36,6 +37,7 @@ export async function POST(
           { status: 400 }
         );
       }
+
       const msFormData = new FormData();
       msFormData.append("audio1", file1);
       msFormData.append("audio2", file2);
@@ -48,7 +50,7 @@ export async function POST(
       );
     }
 
-    // Sende Request an Python-Microservice
+    // Anfrage an den Python-Microservice senden
     const microserviceResponse = await fetch(
       microserviceURL + microserviceEndpoint,
       {
@@ -56,8 +58,6 @@ export async function POST(
         body: bodyToSend,
       }
     );
-
-    const contentType = microserviceResponse.headers.get("content-type") || "";
 
     const msData = await microserviceResponse.json();
     console.log("📦 JSON-Response vom Microservice:", msData);

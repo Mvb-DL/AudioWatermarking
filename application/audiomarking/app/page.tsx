@@ -10,28 +10,24 @@ import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import "github-markdown-css/github-markdown.css";
+import dynamic from "next/dynamic";
+
+const Plotly3D = dynamic(() => import("@/app/components/Plotly3D"), {
+  ssr: false,
+});
+
 
 export default function Home() {
-  // Zustand für das zweite Upload-Feld
-  const [showSecondUpload, setShowSecondUpload] = useState(false);
-  // Zustand, ob die grüne Box (Visualisierung) angezeigt wird
-  const [showGreenBox, setShowGreenBox] = useState(false);
-  // Zustand für den Plot-Image-URL
-  const [plotUrl, setPlotUrl] = useState<string | null>(null);
 
-  // Zustände für Upload-Feld 1
+  const [showSecondUpload, setShowSecondUpload] = useState(false);
+  const [showGreenBox, setShowGreenBox] = useState(false);
   const [selectedFile1, setSelectedFile1] = useState<File | null>(null);
   const [dragActive1, setDragActive1] = useState(false);
   const inputRef1 = useRef<HTMLInputElement>(null);
-
-  // Zustände für Upload-Feld 2
   const [selectedFile2, setSelectedFile2] = useState<File | null>(null);
   const [dragActive2, setDragActive2] = useState(false);
   const inputRef2 = useRef<HTMLInputElement>(null);
   const [segmentData, setSegmentData] = useState<any[] | null>(null);
-
-
-  // Markdown-Zustand für die rechte Box
   const [markdownText, setMarkdownText] = useState("");
 
   // Markdown aus GitHub laden (Raw-Version)
@@ -132,7 +128,6 @@ export default function Home() {
 
   const handleSubmit = async () => {
     setShowGreenBox(true);
-    setPlotUrl(null);
   
     if (!showSecondUpload && selectedFile1) {
       const formData = new FormData();
@@ -149,8 +144,8 @@ export default function Home() {
   
         if (data.image_base64) {
           const base64ImageUrl = `data:image/png;base64,${data.image_base64}`;
-          setPlotUrl(base64ImageUrl);
-          setSegmentData(data.segments || null); // 👈 hier!
+
+          setSegmentData(data.segments || null); 
         } else {
           console.error("❌ Kein Bild in der Antwort.");
         }
@@ -171,7 +166,7 @@ export default function Home() {
   
         const blob = await res.blob();
         const url = URL.createObjectURL(blob);
-        setPlotUrl(url);
+
       } catch (err) {
         console.error("❌ Fehler beim Compare:", err);
       }
@@ -191,6 +186,17 @@ export default function Home() {
     a.click();
     URL.revokeObjectURL(url);
   };
+
+  const resetState = () => {
+    setSelectedFile1(null);
+    setSelectedFile2(null);
+    setShowGreenBox(false);
+    setSegmentData(null);
+    setDragActive1(false);
+    setDragActive2(false);
+    setShowSecondUpload(false);
+  };
+  
   
   
 
@@ -249,8 +255,7 @@ export default function Home() {
                                 type="button"
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  setSelectedFile1(null);
-                                  setShowGreenBox(false);
+                                  resetState();
                                 }}
                                 className="absolute top-0 right-0 m-1 text-red-500 hover:text-red-700"
                                 aria-label="Datei entfernen"
@@ -293,8 +298,7 @@ export default function Home() {
                                 type="button"
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  setSelectedFile2(null);
-                                  setShowGreenBox(false);
+                                  resetState();
                                 }}
                                 className="absolute top-0 right-0 m-1 text-red-500 hover:text-red-700"
                                 aria-label="Datei entfernen"
@@ -338,8 +342,7 @@ export default function Home() {
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                setSelectedFile1(null);
-                                setShowGreenBox(false);
+                                resetState();
                               }}
                               className="absolute top-0 right-0 m-1 text-red-500 hover:text-red-700"
                               aria-label="Datei entfernen"
@@ -419,33 +422,40 @@ export default function Home() {
                 </div>
               </div>
             </main>
-            {/* Grüne Box – Hier wird der Plot (als Bild) angezeigt */}
             {showGreenBox && (
-              <div className="w-full p-4 border border-green-500 bg-gray-50 dark:bg-gray-800 h-[150px] md:h-[100px] lg:h-[200px] xl:h-[300px] flex items-center justify-center">
-                {plotUrl ? (
-                  <div className="flex flex-col items-center gap-4 w-full">
-                    <img
-                      src={plotUrl}
-                      alt="Visualisierung"
-                      className="max-h-[200px] object-contain"
-                    />
-                    {segmentData && (
-                      <button
-                        onClick={downloadJSON}
-                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
-                      >
-                        JSON herunterladen
-                      </button>
-                    )}
-                  </div>
-                ) : (
-                  <p className="text-center text-gray-700 dark:text-gray-300">
-                    Lade Visualisierung...
-                  </p>
-                )}
+  <div className="w-full p-4 border border-green-500 bg-gray-50 dark:bg-gray-800 h-[300px] lg:h-[400px] xl:h-[400px] flex flex-row gap-4">
+    {segmentData ? (
+      <>
+        {/* Linke Box: Text + Download */}
+        <div className="w-1/2 flex flex-col justify-between p-8 bg-white dark:bg-gray-900 rounded shadow">
+          <p className="text-sm text-gray-800 dark:text-gray-200">
+            Die Analyse wurde erfolgreich durchgeführt. Du kannst die
+            berechneten Segmente als JSON-Datei herunterladen.
+          </p>
+          <div className="mt-4">
+            <button
+              onClick={downloadJSON}
+              className="px-4 py-2 bg-black text-white rounded-none hover:bg-white hover:text-black text-sm"
+            >
+              Fingerprint herunterladen
+            </button>
+          </div>
+        </div>
 
-              </div>
-            )}
+        {/* Rechte Box: Plotly 3D */}
+        <div className="w-1/2 h-full">
+          <Plotly3D segments={segmentData} />
+        </div>
+      </>
+    ) : (
+      <p className="text-center text-gray-700 dark:text-gray-300 w-full">
+        Lade Visualisierung...
+      </p>
+    )}
+  </div>
+)}
+
+
           </div>
         </div>
         {/* Rechte Box (Markdown-Viewer) */}
