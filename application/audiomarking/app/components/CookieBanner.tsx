@@ -4,7 +4,7 @@ import CookieConsent from 'react-cookie-consent';
 import Link from 'next/link';
 
 const CookieBanner = () => {
-    
+
   const [gaAccepted, setGaAccepted] = React.useState(false);
 
   const acceptCookies = () => {
@@ -51,15 +51,13 @@ const CookieBanner = () => {
     >
       <div className="flex flex-col md:flex-row md:items-center md:justify-between text-black text-sm">
         <span className="mb-4 md:mb-0 text-center md:text-left">
-          <strong>We use Cookies</strong> – Wir sammeln diese Informationen, um deine Web-Erfahrung zu verbessern. Weitere Informationen findest du in unserer Datenschutzerklärung.
+          <strong>Datenschutz</strong> – Wir sammeln diese Informationen, um deine Web-Erfahrung zu verbessern. Weitere Informationen findest du in unserer Datenschutzerklärung.
         </span>
         <div className="flex flex-col items-center md:flex-row mt-2 md:mt-0">
-          <Link href="/legal/data-terms" passHref className="text-gray-800 font-bold hover:underline mb-2 md:mb-0 md:mr-4">
+          <Link href="/legal" passHref className="text-gray-800 font-bold hover:underline mb-2 md:mb-0 md:mr-4">
               Data Terms
           </Link>
-          <Link href="/legal/notice" passHref className="text-gray-800 font-bold hover:underline">
-            Legal notice
-          </Link>
+         
         </div>
       </div>
     </CookieConsent>
