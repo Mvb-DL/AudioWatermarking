@@ -277,8 +277,10 @@ export default function Home() {
   };
 
   const handleSubmit = async () => {
+    
     setIs3DLoaded(false);
     setShowGreenBox(true);
+
     if (!showSecondUpload && selectedFile1) {
       const formData = new FormData();
       formData.append("audio_file", selectedFile1);
@@ -351,7 +353,7 @@ export default function Home() {
         )}
 
         <div className="flex justify-center md:justify-start ">
-          <h1 className="text-3xl font-bold">Audio Watermarking</h1>
+          <h1 className="text-3xl font-bold">Audio Fingerprint</h1>
         </div>
 
         <div className="flex flex-col md:flex-row gap-8 flex-grow md:items-stretch">
@@ -387,6 +389,8 @@ export default function Home() {
                                 <span className="text-gray-900 overflow-hidden whitespace-nowrap text-ellipsis block text-center">
                                   {selectedFile1.name}
                                 </span>
+
+                                {!showGreenBox && (
                                 <button
                                   type="button"
                                   onClick={(e) => {
@@ -401,6 +405,7 @@ export default function Home() {
                                 >
                                   X
                                 </button>
+                                )}
                               </div>
                             ) : (
                               <span className="text-gray-500 text-center text-sm">
@@ -432,6 +437,7 @@ export default function Home() {
                                 <span className="text-gray-900 overflow-hidden whitespace-nowrap text-ellipsis block text-center">
                                   {selectedFile2.name}
                                 </span>
+                                {!showGreenBox && (
                                 <button
                                   type="button"
                                   onClick={(e) => {
@@ -445,8 +451,8 @@ export default function Home() {
                                   aria-label="Datei entfernen"
                                 >
                                   X
-                                </button>
-                              </div>
+                                </button> )}
+                              </div> 
                             ) : (
                               <span className="text-gray-500 text-center text-sm">
                                 Add your <b>second</b> audio file
@@ -479,6 +485,7 @@ export default function Home() {
                               <span className="text-gray-900 overflow-hidden whitespace-nowrap text-ellipsis block text-center">
                                 {selectedFile1.name}
                               </span>
+                              {!showGreenBox && (
                               <button
                                 type="button"
                                 onClick={(e) => {
@@ -492,7 +499,7 @@ export default function Home() {
                                 aria-label="Datei entfernen"
                               >
                                 X
-                              </button>
+                              </button> )}
                             </div>
                           ) : (
                             <span className="text-gray-500 text-center text-sm">
@@ -535,7 +542,7 @@ export default function Home() {
                     {(!showGreenBox && !showSecondUpload && selectedFile1) && (
                       <button
                         onClick={handleSubmit}
-                        className="w-1/2 mt-4 border bg-foreground text-background h-10 rounded-none"
+                        className="w-1/3 px-4 py-3 bg-black text-white rounded-none hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm cursor-pointer"
                       >
                         Erstelle Fingerprint
                       </button>
@@ -546,17 +553,36 @@ export default function Home() {
                       selectedFile2) && (
                       <button
                         onClick={handleSubmit}
-                        className="w-2/3 mt-4 border bg-foreground text-background h-10 rounded-none"
+                        className="w-1/3 px-4 py-3 bg-black text-white rounded-none hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm cursor-pointer"
                       >
                         Audiofiles vergleichen
                       </button>
                     )}
+                     {showGreenBox && (
+                       
+                           <button
+                           onClick={(e) => {
+                            e.stopPropagation();
+                            if (inputRef1.current)
+                            inputRef1.current.value = "";
+                            if (inputRef2.current)
+                            inputRef2.current.value = "";
+                            setSelectedFile1(null);
+                            setSelectedFile2(null);
+                            setShowGreenBox(false);
+                          }}
+                             className="w-1/3 px-4 py-3 bg-black text-white rounded-none hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm cursor-pointer"
+                           >
+                             Neues Audiofile
+                           </button>
+                    
+                       )}
                   </div>
                 </div>
               </main>
               {showGreenBox && (
                 <div
-                  className={`relative w-full mt-5 bg-gray-50 border min-h-[200px] lg:h-[380px] flex flex-col md:flex-row gap-2 ${
+                  className={`relative w-full mt-5 bg-gray-50 border min-h-[200px] lg:h-[450px] flex flex-col md:flex-row gap-2  ${
                     segmentData &&
                     segmentData.weighted_avg_deviation !== undefined &&
                     segmentData.weighted_std_deviation !== undefined &&
@@ -640,6 +666,7 @@ export default function Home() {
                   )}
                 </div>
               )}
+          
             </div>
           </div>
           <aside className="w-full md:w-2/4 p-4 bg-white dark:bg-black flex flex-col h-[500px] lg:h-[550px] xl:h-[930px] lg:pt-10">
