@@ -33,29 +33,34 @@ interface ComparePlotly3DWrapperProps {
   onLoaded: () => void;
 }
 
-// Wrapper für Plotly3D, um den Ladevorgang zu signalisieren
+// Wrapper für Plotly3D: Rendert nur, wenn segments ein Array ist
 function Plotly3DWrapper({ segments, onLoaded }: Plotly3DWrapperProps) {
   useEffect(() => {
-    // Simuliere, dass die Komponente nach dem Mounting "geladen" ist
-    onLoaded();
-  }, [onLoaded]);
+    if (Array.isArray(segments)) {
+      onLoaded();
+    }
+  }, [segments, onLoaded]);
+
+  if (!segments || !Array.isArray(segments)) {
+    return null;
+  }
   return <Plotly3D segments={segments} />;
 }
 
 // Angepasster Wrapper für ComparePlotly3D:
-// Rendert die 3D-Komponente nur, wenn beide Segmente vorhanden sind.
+// Rendert die 3D-Komponente nur, wenn beide Segmente als Array vorliegen.
 function ComparePlotly3DWrapper({
   segments1,
   segments2,
   onLoaded,
 }: ComparePlotly3DWrapperProps) {
   useEffect(() => {
-    if (segments1 && segments2) {
+    if (Array.isArray(segments1) && Array.isArray(segments2)) {
       onLoaded();
     }
   }, [segments1, segments2, onLoaded]);
 
-  if (!segments1 || !segments2) {
+  if (!segments1 || !Array.isArray(segments1) || !segments2 || !Array.isArray(segments2)) {
     return null;
   }
   return <ComparePlotly3D segments1={segments1} segments2={segments2} />;
@@ -72,9 +77,9 @@ function LoadingProgress() {
           clearInterval(interval);
           return 100;
         }
-        return prev + 1; // Erhöhe den Wert schrittweise (anpassbar)
+        return prev + 1;
       });
-    }, 50); // Aktualisierung alle 50ms (anpassbar)
+    }, 50);
     return () => clearInterval(interval);
   }, []);
 
@@ -92,10 +97,10 @@ export default function Home() {
   const [selectedFile2, setSelectedFile2] = useState<File | null>(null);
   const [dragActive2, setDragActive2] = useState(false);
   const inputRef2 = useRef<HTMLInputElement>(null);
-  // Bei fingerprint erwarten wir ein Array, bei compare ein Objekt mit den Keys "audio1" und "audio2"
+  // Für fingerprint erwarten wir ein Array, für compare ein Objekt mit den Keys "audio1" und "audio2"
   const [segmentData, setSegmentData] = useState<any>(null);
   const [markdownText, setMarkdownText] = useState("");
-  // State, um den Ladevorgang des 3D-Modells (und der dazugehörigen Box) zu tracken
+  // State, um den Ladevorgang der 3D-Komponente zu tracken
   const [is3DLoaded, setIs3DLoaded] = useState(false);
 
   useEffect(() => {
@@ -130,7 +135,7 @@ export default function Home() {
     if (!allowedMimeTypes.includes(file.type)) return false;
     const fileName = file.name.toLowerCase();
     if (!allowedExtensions.some((ext) => fileName.endsWith(ext))) return false;
-    const maxSize = 10 * 1024 * 1024; // 10 MB
+    const maxSize = 10 * 1024 * 1024;
     if (file.size > maxSize) return false;
     return true;
   };
@@ -260,7 +265,6 @@ export default function Home() {
   };
 
   const handleSubmit = async () => {
-    // Reset des 3D-Ladezustandes vor jedem neuen API-Aufruf
     setIs3DLoaded(false);
     setShowGreenBox(true);
     if (!showSecondUpload && selectedFile1) {
@@ -372,10 +376,8 @@ export default function Home() {
                                 type="button"
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  // Löscht den Input, setzt den Selected-File-Zustand zurück
                                   if (inputRef1.current) inputRef1.current.value = "";
                                   setSelectedFile1(null);
-                                  // Blendet die Greenbox aus
                                   setShowGreenBox(false);
                                 }}
                                 className="absolute top-0 right-2 m-1 text-xl text-red-500"
@@ -611,10 +613,8 @@ export default function Home() {
                     </>
                   )
                 ) : (
-                  // Falls segmentData noch nicht vorhanden ist, zeigen wir ein leeres Feld
                   <div className="w-full h-full"></div>
                 )}
-                {/* Overlay mit Progress Bar, solange segmentData nicht vorhanden oder 3D-Komponente noch nicht geladen */}
                 {(!segmentData || !is3DLoaded) && (
                   <div className="absolute inset-0 flex items-center justify-center bg-gray-50 z-10">
                     <LoadingProgress />
