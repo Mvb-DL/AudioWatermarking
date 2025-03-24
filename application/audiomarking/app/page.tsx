@@ -12,6 +12,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import "github-markdown-css/github-markdown.css";
 import dynamic from "next/dynamic";
+import CookieBanner from '@/app/components/CookieBanner';
 
 // Dynamischer Import für 3D-Komponenten
 const Plotly3D = dynamic(() => import("@/app/components/Plotly3D"), {
@@ -649,7 +650,9 @@ export default function Home() {
             </ReactMarkdown>
           </div>
         </aside>
+        <CookieBanner />
       </div>
+    
     </div>
   );
 }
