@@ -252,30 +252,6 @@ export default function Home() {
     URL.revokeObjectURL(url);
   };
 
-  const downloadJSONLocal = () => {
-    if (!segmentData || !segmentData.audio1) return;
-    const jsonStr = JSON.stringify(segmentData.audio1, null, 2);
-    const blob = new Blob([jsonStr], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "compare_local_audio1.json";
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const downloadJSONGlobal = () => {
-    if (!segmentData || !segmentData.audio2) return;
-    const jsonStr = JSON.stringify(segmentData.audio2, null, 2);
-    const blob = new Blob([jsonStr], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "compare_local_audio2.json";
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
   const handleSubmit = async () => {
     
     setIs3DLoaded(false);
