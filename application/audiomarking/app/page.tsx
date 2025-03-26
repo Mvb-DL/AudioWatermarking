@@ -102,16 +102,12 @@ export default function Home() {
   const [selectedFile2, setSelectedFile2] = useState<File | null>(null);
   const [dragActive2, setDragActive2] = useState(false);
   const inputRef2 = useRef<HTMLInputElement>(null);
-  // Für fingerprint erwarten wir ein Array, für compare ein Objekt mit den Keys "audio1" und "audio2"
   const [segmentData, setSegmentData] = useState<any>(null);
   const [markdownText, setMarkdownText] = useState("");
-  // State, um den Ladevorgang der 3D-Komponente zu tracken
   const [is3DLoaded, setIs3DLoaded] = useState(false);
 
-  // Tutorial step state (1: Uploadbereich, 2: Auswahl Fingerprint/Compare, 3: Button "Erstelle Fingerprint", 4: 3D Ergebnis, 5: Tutorial beendet)
   const [tutorialStep, setTutorialStep] = useState(0);
 
-  // Beim ersten Laden prüfen wir, ob der User das Tutorial schon gesehen hat
   useEffect(() => {
     const tutorialSeen = localStorage.getItem("tutorialSeen");
     if (tutorialSeen === "true") {
@@ -140,15 +136,15 @@ export default function Home() {
       );
   }, []);
 
-  useEffect(() => {
+  const scrollToTutorialTarget = useCallback((step: number) => {
     if (
       typeof window !== "undefined" &&
       window.innerWidth < 768 &&
-      tutorialStep >= 1 &&
-      tutorialStep < 5
+      step >= 1 &&
+      step < 5
     ) {
       let targetId = "";
-      switch (tutorialStep) {
+      switch (step) {
         case 1:
         case 2:
           targetId = "upload-area";
@@ -173,7 +169,19 @@ export default function Home() {
         });
       }
     }
-  }, [tutorialStep]);
+  }, []);
+
+
+  useEffect(() => {
+    scrollToTutorialTarget(tutorialStep);
+  }, [tutorialStep, scrollToTutorialTarget]);
+
+
+  const handleTutorialEnd = () => {
+    setTutorialStep(5);
+    localStorage.setItem("tutorialSeen", "true");
+    scrollToTutorialTarget(1);
+  };
   
   
 
@@ -590,7 +598,7 @@ export default function Home() {
                       selectedFile2) && (
                       <button
                         onClick={handleSubmit}
-                        className="w-1/3 px-4 py-3 bg-black text-white rounded-none hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm cursor-pointer"
+                        className="w-1/2 mt-4 md:mt-0 md:w-1/3 px-4 py-3 bg-black text-white rounded-none hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm cursor-pointer"
                       >
                         Audiofiles vergleichen
                       </button>
@@ -605,7 +613,7 @@ export default function Home() {
                           setSelectedFile2(null);
                           setShowGreenBox(false);
                         }}
-                        className="w-1/3 px-4 py-3 bg-black text-white rounded-none hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm cursor-pointer"
+                        className="w-1/2 mt-4 md:mt-0 md:w-1/3 px-4 py-3 bg-black text-white rounded-none hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm cursor-pointer"
                       >
                         Neues Audiofile
                       </button>
@@ -704,7 +712,7 @@ export default function Home() {
               )}
             </div>
           </div>
-          <aside className="w-full md:w-2/4 p-4 bg-white dark:bg-black flex flex-col h-[500px] lg:h-[550px] xl:h-[930px] lg:pt-10">
+          <aside className="w-full mt-20 md:mt-0 md:w-2/4 p-4 bg-white dark:bg-black flex flex-col h-[500px] lg:h-[550px] xl:h-[930px] lg:pt-10">
             <div className="flex-1 overflow-y-auto markdown-body">
               {markdownText ? (
                 <ReactMarkdown
@@ -915,10 +923,11 @@ export default function Home() {
         Zurück
       </button>
       <button
-        onClick={() => {
-          setTutorialStep(5);
-          localStorage.setItem("tutorialSeen", "true");
-        }}
+       onClick={() => {
+        setTutorialStep(5);
+        localStorage.setItem("tutorialSeen", "true");
+        scrollToTutorialTarget(1);
+      }}
         className="px-4 py-2 bg-blue-500 text-white text-sm md:text-lg cursor-pointer"
       >
         Los geht´s
