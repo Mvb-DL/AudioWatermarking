@@ -1,54 +1,53 @@
-# Audio Fingerprinting zur Plagiaterkennung
+# Audio fingerprinting for plagiarism detection
 
-## Ziel des Projekts
+## Project objective
 
-Das Projekt dient dazu, dass ein Künstler sein Audiowerk mit einem individuellen Fingerabdruck versehen kann. Zu dem kann der Nutzer definieren, wie stark ein anderes Audiofile von seinem Original abweichen darf, bevor es als Plagiat gilt. Die Methode ermöglicht es, effizient Fingerprints zu speichern und miteinander zu vergleichen. Künstlern soll es in Zukunft mittels dieser Open-Source Lösung möglich sein, ihre Werke zu schützen und Kopien aufzudecken.
-
----
-
-## Überblick und Methodik
-
-Jedes Audiosignal wird zunächst per Fourier-Transformation in den Frequenzbereich überführt und anschließend in gleich große Segmente unterteilt. In jedem Segment wird die Energie (das Integral der Amplituden) berechnet. Diese segmentierten Werte werden in Form von Fingerprints gespeichert – umgesetzt durch verkettete Listen, bei denen jedes Segment wichtige Parameter wie Start- und Endfrequenz, den prozentualen Anteil der idealen Fläche (*usage_percent*) und die tatsächliche Integralfläche enthält.
-
-### Konkrete Schritte des Audio Fingerprintings
-
-1. Das Audiofile wird in ein Frequenzspektrum von Amplitude und Frequenz übertragen.
-2. Das Frequenzspektrum wird in n-viele Segmente aufgeteilt.
-3. Es wird die Gesamtsegmentfläche mit der direkten Energie-Integralfläche subtrahiert.
-4. Die einzelnen subtrahierten Segmentflächen werden in einer Datenstruktur in Form einer verketteten Liste gespeichert.
-5. Diese verkettete Liste wird in einen dreidimensionalen Raum übertragen (Der finale Fingerprint).
-6. Abschließend kann die verkettete Liste mit anderen verketteten Listen verglichen und deren Differenz erfasst werden. Charakteristische Abweichungen können Mutmaßungen darüber geben, was zu der Abweichung geführt hat (EQ, Gain, Compressing ...)
-
-Ein zentraler Aspekt der Methode ist die flexible Skalierung:
-
-- **Lokale Skalierung:**  
-  Jedes Audiofile wird anhand des eigenen maximalen Amplitudenwertes normalisiert, was robust gegenüber internen Gain-Änderungen ist.
-
-- **Globale Skalierung:**  
-  Ein einheitlicher, globaler Maximalwert ermöglicht den direkten Vergleich von Fingerprints verschiedener Audiofiles.
-
-Diese Ansätze erlauben es, präzise Unterschiede im spektralen Flächenverbrauch und in dynamischen Eigenschaften (wie RMS, Crest-Faktor und Delay-Effekten) zu ermitteln.
+The project aims to enable artists to assign a unique fingerprint to their audio works. Users can also define how much an audio file can deviate from the original before it is considered plagiarism. The method allows fingerprints to be stored and compared efficiently. In the future, this open-source solution will enable artists to protect their works and detect copies.
 
 ---
 
-## Ausblick
+## Overview and methodology
 
-Die nächsten Schritte umfassen:
-- Verbesserung der Dokumentation
-- Umfangreiche Tests
-- Entwicklung einer praktischen Umsetzung (eventuell sogar mit einem eigenen Filetype)
+Each audio signal is first converted to the frequency domain using Fourier transformation and then divided into segments of equal size. The energy (the integral of the amplitudes) is calculated in each segment. These segmented values are stored in the form of fingerprints – implemented by linked lists in which each segment contains important parameters such as start and end frequency, the percentage of the ideal area (*usage_percent*) and the actual integral area.
 
-Ziel ist es, Künstlern ein effektives Werkzeug an die Hand zu geben, um Plagiate ihrer Werke frühzeitig zu erkennen und so ihre Originale zu schützen.
+### Specific steps of audio fingerprinting
+
+1. The audio file is converted into a frequency spectrum of amplitude and frequency.
+2. The frequency spectrum is divided into n segments.
+3. The total segment area is subtracted from the direct energy integral area.
+4. The individual subtracted segment areas are stored in a data structure in the form of a linked list.
+5. This linked list is converted into a three-dimensional space (the final fingerprint).
+6. Finally, the linked list can be compared with other linked lists and their differences recorded. Characteristic deviations can provide clues as to what caused the deviation (EQ, gain, compression, etc.).
+
+A central aspect of the method is flexible scaling:
+
+- **Local scaling:**  
+  Each audio file is normalized based on its own maximum amplitude value, which is robust against internal gain changes.
+
+- **Global scaling:**  
+  A uniform, global maximum value enables direct comparison of fingerprints from different audio files.
+
+These approaches make it possible to determine precise differences in spectral area consumption and dynamic properties (such as RMS, crest factor, and delay effects).
 
 ---
 
-## Disclaimer zum Urheberrecht
+## Outlook
 
-Das Urheberrecht an diesem Projekt liegt bei **Mario von Bassen**.  
-Der Autor ist Informatiker und kein Mathematiker, weshalb die mathematischen Formulierungen mit externer Unterstützung entstanden sind.  
-Die Idee des Fingerprintings ist eigenständig entwickelt worden, auch wenn nach Recherche Unternehmen wie Shazam verwandte Techniken verwenden – diese Umsetzung weicht in einigen Details ab.  
-Feedback und Anregungen sind gerne an [mariovonbassen@gmail.com](mailto:mariovonbassen@gmail.com) zu richten
+The next steps include:
+- Improving the documentation
+- Extensive testing
+- Developing a practical implementation (possibly even with its own file type)
 
+The goal is to provide artists with an effective tool to detect plagiarism of their works at an early stage and thus protect their originals.
+
+---
+
+## Copyright disclaimer
+
+The copyright for this project belongs to **Mario von Bassen**.  
+The author is a computer scientist and not a mathematician, which is why the mathematical formulations were created with external support.  
+The idea of fingerprinting was developed independently, even though research has shown that companies such as Shazam use related techniques – this implementation differs in some details.  
+Feedback and suggestions are welcome at [mariovonbassen@gmail.com](mailto:mariovonbassen@gmail.com)
 
 
 
@@ -62,7 +61,7 @@ from scipy.signal import find_peaks
 import json
 ```
 
-# Frequenzspektrum und Gesamtenergie eines Audiofiles
+# Frequency spectrum and total energy of an audio file
 
 
 ```python
@@ -92,57 +91,57 @@ plt.show()
 ![png](frequenz_test_files/output.png)
 
 
-# Frequenzanalyse und Energieberechnung eines Audiosignals
+# Frequency analysis and energy calculation of an audio signal
 
-Das dargestellte Ergebnis ist ein Frequenzspektrum, das zeigt, wie sich die Energie eines Audiosignals über verschiedene Frequenzen verteilt. Auf der horizontalen Achse sind die Frequenzen in Hertz (Hz) eingetragen, während die vertikale Achse die Amplituden der entsprechenden Frequenzanteile anzeigt.
+The result shown is a frequency spectrum that shows how the energy of an audio signal is distributed across different frequencies. The horizontal axis shows the frequencies in hertz (Hz), while the vertical axis shows the amplitudes of the corresponding frequency components.
 
-## 1. Fourier-Transformation
+## 1. Fourier transform
 
-Das ursprüngliche Audiosignal, das in der Zeitdomäne vorliegt, wird mittels der **diskreten Fourier-Transformation (DFT)** in den Frequenzbereich überführt. Dabei wird das Signal als Summe von Sinus- und Kosinuswellen unterschiedlicher Frequenzen dargestellt. Die mathematische Formel lautet:
+The original audio signal, which is in the time domain, is converted to the frequency domain using the **discrete Fourier transform (DFT)**. The signal is represented as the sum of sine and cosine waves of different frequencies. The mathematical formula is:
 
 $$
 X[k] = \sum_{n=0}^{N-1} x[n] \cdot e^{-i\, 2\pi \frac{k \cdot n}{N}}
 $$
 
-wobei:
-- \( x[n] \) das zeitdiskrete Audiosignal ist,
-- \( N \) die Gesamtanzahl der Signalproben darstellt,
-- \( X[k] \) der komplexe Fourier-Koeffizient für den Frequenzindex \( k \) ist.
+where:
+- \( x[n] \) is the time-discrete audio signal,
+- \( N \) represents the total number of signal samples,
+- \( X[k] \) is the complex Fourier coefficient for the frequency index \( k \).
 
-Um die Stärke der einzelnen Frequenzanteile zu ermitteln, wird der Betrag der komplexen Fourier-Koeffizienten berechnet:
+To determine the strength of the individual frequency components, the magnitude of the complex Fourier coefficients is calculated:
 
 $$
 |X[k]| = \sqrt{\Re(X[k])^2 + \Im(X[k])^2}
 $$
 
-Da reale Signale ein symmetrisches Spektrum aufweisen, werden üblicherweise nur die positiven Frequenzen betrachtet.
+Since real signals have a symmetrical spectrum, only the positive frequencies are usually considered.
 
-## 2. Energieberechnung (Amplitudenspektrum)
+## 2. Energy calculation (amplitude spectrum)
 
-Die Gesamtenergie eines Signals kann über die quadrierten Amplituden berechnet werden. Dank des **Parsevalschen Theorems** gilt:
+The total energy of a signal can be calculated using the squared amplitudes. Thanks to **Parseval's theorem**, the following applies:
 
 $$
 E = \frac{1}{N}\sum_{n=0}^{N-1} |x[n]|^2 = \sum_{k=0}^{N-1} |X[k]|^2
 $$
 
-Im Frequenzbereich wird dabei die Energie aus den quadrierten Amplituden (Beträgen) der Fourier-Koeffizienten berechnet. Betrachtet man nur die positiven Frequenzen, wird die Gesamtenergie wie folgt bestimmt:
+In the frequency domain, the energy is calculated from the squared amplitudes (magnitudes) of the Fourier coefficients. If only the positive frequencies are considered, the total energy is determined as follows:
 
 $$
-\text{Gesamtenergie} = \frac{1}{N}\sum_{k \in \text{positiv}} |X[k]|^2
+\text{Total energy} = \frac{1}{N}\sum_{k \in \text{positive}} |X[k]|^2
 $$
 
-## Zusammenfassung
+## Summary
 
-- **Transformation:** Das zeitabhängige Signal wird in den Frequenzraum transformiert, indem es als Summe von Schwingungen unterschiedlicher Frequenzen dargestellt wird.
-- **Spektrumanalyse:** Die Amplituden der einzelnen Frequenzen werden durch die Berechnung der Beträge der Fourier-Koeffizienten bestimmt.
-- **Energieberechnung:** Durch Quadrieren und Aufsummieren der Amplituden (unter Beachtung der Symmetrie des Spektrums) erhält man ein Maß für die Gesamtenergie des Signals.
-- **Visualisierung:** Das Frequenzspektrum zeigt grafisch die Verteilung der Energie über verschiedene Frequenzbereiche, sodass dominierende Frequenzen – beispielsweise im interessierenden Bereich von 0 bis 2000 Hz (Bereich für Musikstücke) – sofort erkennbar sind.
+- **Transformation:** The time-dependent signal is transformed into the frequency domain by representing it as the sum of oscillations of different frequencies.
+- **Spectrum analysis:** The amplitudes of the individual frequencies are determined by calculating the magnitudes of the Fourier coefficients.
+- **Energy calculation:** By squaring and summing the amplitudes (taking into account the symmetry of the spectrum), a measure of the total energy of the signal is obtained.
+- **Visualization:** The frequency spectrum graphically shows the distribution of energy across different frequency ranges, so that dominant frequencies—for example, in the range of interest from 0 to 2000 Hz (range for music pieces)—are immediately recognizable.
 
-## Quellen 
+## Sources 
 
 https://de.wikipedia.org/wiki/Satz_von_Parseval, https://de.wikipedia.org/wiki/Fourier-Transformation
 
-# Segmentierung des Audiofiles
+# Segmentation of the audio file
 
 
 ```python
@@ -202,46 +201,46 @@ plt.show()
     
 
 
-# Frequenzspektrum in \( n \) Segmenten unterteilen
+# Divide the frequency spectrum into \( n \) segments
 
-Die vorgestellte Methode analysiert ein Audiosignal, transformiert es in den Frequenzbereich und teilt anschließend den angezeigten Frequenzbereich in \( n \) gleich große Segmente (Boxen) ein. Dabei wird das Frequenzspektrum visualisiert und zugleich mathematisch in Teilabschnitte zerlegt.
+The method presented analyzes an audio signal, transforms it into the frequency domain, and then divides the displayed frequency domain into \( n \) equal segments (boxes). In doing so, the frequency spectrum is visualized and simultaneously broken down mathematically into sub-sections.
 
-## 3. Unterteilung des Frequenzbereichs in \( n \) Segmente
+## 3. Dividing the frequency range into \( n \) segments
 
-Der betrachtete Frequenzbereich, beispielsweise von $$x_{\min} = 0 \text{ Hz bis } x_{\max} = 2000$$, wird in \( n \) gleich große Bereiche unterteilt. Die Breite einer Box \( W \) berechnet sich durch:
+The frequency range under consideration, for example from $$x_{\min} = 0 \text{ Hz to } x_{\max} = 2000$$, is divided into \( n \) equal-sized ranges. The width of a box \( W \) is calculated by:
 
 $$
 W = \frac{x_{\max} - x_{\min}}{n}
 $$
 
-Für jedes Segment $i$ (wobei $i = 0, 1, 2, \dots, n-1$) gilt dann:
+For each segment $i$ (where $i = 0, 1, 2, \dots, n-1$), the following applies:
 
 $$
 x_{\text{start}, i} = x_{\min} + i \cdot W
 $$
 
-Somit wird der gesamte Frequenzbereich in \( n \) Bereiche aufgeteilt, die jeweils die gleiche Breite haben.
+Thus, the entire frequency range is divided into \( n \) areas, each of which has the same width.
 
 
-# Beschreibung der `compute_max_segments` Funktion
+# Description of the `compute_max_segments` function
 
-Die Funktion `compute_max_segments` berechnet die maximal mögliche Anzahl an Segmenten, in die der Frequenzbereich eines Audiosignals unterteilt werden kann. Dies erfolgt basierend auf der Frequenzauflösung des Signals. Dabei wird sichergestellt, dass die Breite jedes Segments mindestens der Frequenzauflösung entspricht, sodass in jedem Segment genügend Frequenzinformation vorhanden ist, um ein aussagekräftiges Integral des Spektrums zu berechnen.
+The function `compute_max_segments` calculates the maximum possible number of segments into which the frequency range of an audio signal can be divided. This is done based on the frequency resolution of the signal. This ensures that the width of each segment is at least equal to the frequency resolution, so that each segment contains enough frequency information to calculate a meaningful integral of the spectrum.
 
-## Mathematischer Hintergrund
+## Mathematical background
 
-**Frequenzauflösung:**  
-Nach dem Laden des Audiosignals wird die Frequenzauflösung, $\Delta f$, ermittelt, die angibt, wie groß der Frequenzabstand zwischen zwei benachbarten Punkten im Spektrum ist. Sie berechnet sich wie folgt:
+**Frequency resolution:**  
+After loading the audio signal, the frequency resolution, $\Delta f$, is determined, which specifies how large the frequency spacing between two adjacent points in the spectrum is. It is calculated as follows:
 
 $$
 \Delta f = \frac{sr}{N}
 $$
 
-Dabei ist:
-- $sr$ die Abtastrate des Signals,
-- $N$ die Anzahl der Signalproben.
+Where:
+- $sr$ is the sampling rate of the signal,
+- $N$ is the number of signal samples.
 
-**Berechnung der maximal möglichen Segmente:**  
-Für einen definierten Frequenzbereich von $x_{\text{min}}$ bis $x_{\text{max}}$ wird die maximal mögliche Anzahl an Segmenten berechnet, indem der Gesamtfrequenzbereich durch die Frequenzauflösung geteilt wird:
+**Calculation of the maximum possible segments:**
+For a defined frequency range from $x_{\text{min}}$ to $x_{\text{max}}$, the maximum possible number of segments is calculated by dividing the total frequency range by the frequency resolution:
 
 
 $$
@@ -249,11 +248,11 @@ max_{segments_{possible}} = \frac{x_{max} - x_{min}}{\Delta f}
 $$
 
 
-Der so berechnete Wert wird anschließend in einen ganzzahligen Wert umgewandelt, um die Anzahl der sinnvollen Segmente zu erhalten.
+The value calculated in this way is then converted to an integer value to obtain the number of meaningful segments.
 
 
 
-## Quellcode der Funktion
+## Source code of the function
 
 ```python
 def compute_max_segments(audio_file, x_min, x_max):
@@ -263,16 +262,15 @@ def compute_max_segments(audio_file, x_min, x_max):
     return max_segments_possible
 ```
 
-## Zusammenfassung
+## Summary
 
-- **Transformation:** Das zeitabhängige Signal wird mittels DFT in den Frequenzraum transformiert.
-- **Spektrumanalyse:** Durch Berechnung der Beträge der Fourier-Koeffizienten erhält man das Amplitudenspektrum.
-- **Segmentierung:** Der Frequenzbereich (z.B. von 0 bis 2000 Hz) wird wieder (wie siehe oben) in n gleich große Segmente unterteilt
+- **Transformation:** The time-dependent signal is transformed into the frequency domain using DFT.
+- **Spectrum analysis:** The amplitude spectrum is obtained by calculating the magnitudes of the Fourier coefficients.
+- **Segmentation:** The frequency range (e.g., from 0 to 2000 Hz) is again divided into n equal segments (as above).
 
 
 
-# Berechnung Segmentfläche und Integralfläche
-
+# Calculation of segment area and integral area
 
 ```python
 import numpy as np
@@ -352,55 +350,50 @@ plt.show()
     
 
 
-# Beschreibung der Frequenzspektrumsegmentierung und Flächenberechnung
+# Description of frequency spectrum segmentation and area calculation
 
-Der vorgestellte Vorgang unterteilt das Frequenzspektrum eines Audiosignals in $n$ gleich große Segmente und vergleicht für jedes Segment die ideale Rechtecksfläche mit der tatsächlich integrierten Fläche unter der Spektrumskurve. Dabei wird mittels der Trapezregel die Fläche der Kurve im jeweiligen Frequenzintervall numerisch bestimmt und von der idealen Fläche subtrahiert.
+The process described here divides the frequency spectrum of an audio signal into $n$ segments of equal size and compares the ideal rectangular area with the actual integrated area under the spectrum curve for each segment. The area of the curve in the respective frequency interval is determined numerically using the trapezoidal rule and subtracted from the ideal area.
 
-## 4. Flächenberechnung im Segment
+## 4. Area calculation in the segment
 
-## Ideale Rechtecksfläche
-Für jedes Segment wird zunächst eine ideale Rechtecksfläche als Referenz festgelegt. Diese Fläche wird definiert als das Produkt der Segmentbreite $W$ und der maximalen Amplitude $A_{max}$ im betrachteten Frequenzbereich:
-
-$$
-Fläche_{Rechteck} = W \cdot A_{max}
-$$
-
-## Integrierte Spektrumfläche
-Die tatsächliche Fläche unter der Spektrumskurve im jeweiligen Segment wird durch numerische Integration (hier mittels der Trapezregel) bestimmt:
+## Ideal rectangular area
+For each segment, an ideal rectangular area is first defined as a reference. This area is defined as the product of the segment width $W$ and the maximum amplitude $A_{max}$ in the frequency range under consideration:
 
 $$
-Fläche_{Spektrum} = \int_{Start_i}^{Ende_i} \left| X(f) \right| \, df
+Area_{rectangle} = W \cdot A_{max}
 $$
 
-Hierbei ist $\left| X(f) \right|$ die Amplitude des Spektrums in Abhängigkeit von der Frequenz $f$.
-
-## 5. Differenzbildung
-
-Die Differenz zwischen der idealen Rechtecksfläche und der integrierten Spektrumfläche gibt an, wie groß der Flächenunterschied im jeweiligen Segment ist. Diese Differenz wird berechnet als:
+## Integrated spectrum area
+The actual area under the spectrum curve in the respective segment is determined by numerical integration (here using the trapezoidal rule):
 
 $$
-\Delta A_i = Fläche_{Rechteck} - Fläche_{Spektrum}
+Area_{spectrum} = \int_{Start_i}^{End_i} \left| X(f) \right| \, df
 $$
 
-Der Wert $\Delta A_i$ wird anschließend für jedes Segment im Plot als Text dargestellt, um die Abweichung zwischen der idealen und der real gemessenen Energieverteilung im Frequenzbereich zu veranschaulichen.
+Here, $\left| X(f) \right|$ is the amplitude of the spectrum as a function of frequency $f$.
+
+## 5. Calculating the difference
+
+The difference between the ideal rectangle area and the integrated spectrum area indicates how large the area difference is in the respective segment. This difference is calculated as:
+
+$$
+\Delta A_i = Area_{rectangle} - Area_{spectrum}
+$$
+
+The value $\Delta A_i$ is then displayed as text for each segment in the plot to illustrate the deviation between the ideal and the actual measured energy distribution in the frequency domain.
 
 
 
+## Summary
+
+- **Transformation:** The audio signal is transformed into the frequency domain to obtain the amplitude spectrum.
+- **Spectrum analysis:** The amplitude spectrum is calculated by determining the magnitudes of the Fourier coefficients.
+- **Segmentation:** The frequency range (e.g., from 0 to 2000 Hz) is divided into $n$ equal segments, where the width of each segment is $W = \frac{2000}{n}$.
+- **Area calculation:** For each segment, the ideal rectangular area $W \times A_{max}$ is calculated as a reference, and the actual area under the spectrum curve is integrated using the trapezoidal rule.
+- **Difference calculation:** The difference $\Delta_i = area_{rectangle} - area_{spectrum}$ shows the area difference in the segment and is displayed in the plot for visualization.
 
 
-
-
-## Zusammenfassung
-
-- **Transformation:** Das Audiosignal wird in den Frequenzraum transformiert, um das Amplitudenspektrum zu erhalten.
-- **Spektrumanalyse:** Es wird das Amplitudenspektrum berechnet, indem die Beträge der Fourier-Koeffizienten ermittelt werden.
-- **Segmentierung:** Der Frequenzbereich (z.B. von 0 bis 2000 Hz) wird in $n$ gleich große Segmente unterteilt, wobei die Breite jedes Segments $W = \frac{2000}{n}$ beträgt.
-- **Flächenberechnung:** Für jedes Segment wird die ideale Rechtecksfläche $W \times A_{max}$ als Referenz berechnet, und die tatsächliche Fläche unter der Spektrumskurve wird mittels Trapezregel integriert.
-- **Differenzbildung:** Die Differenz $\Delta_i = Fläche_{Rechteck} - Fläche_{Spektrum}$ zeigt den Flächenunterschied im Segment und wird zur Visualisierung in den Plot eingeblendet.
-
-
-# Fingerprint als verkettete Liste. Erstellung eines Audio Fingerprints.
-
+# Fingerprint as a linked list. Creation of an audio fingerprint.
 
 ```python
 # Parameter
@@ -569,34 +562,34 @@ if __name__ == "__main__":
     
 
 
-# Aufbau einer verketteten Liste zur Speicherung der Integralflächen pro Segment
+# Creating a linked list to store the integral areas per segment
 
-Dieser Prozess unterteilt das Frequenzspektrum eines Audiosignals in mehrere Segmente und speichert für jedes Segment wichtige Informationen in einem Element einer verketteten Liste. Dabei werden sowohl mathematische Berechnungen als auch Datenstrukturen verwendet, um einen "Fingerprint" des Spektrums zu erstellen.
+This process divides the frequency spectrum of an audio signal into several segments and stores important information for each segment in an element of a linked list. Both mathematical calculations and data structures are used to create a “fingerprint” of the spectrum.
 
-## Aufbau eines Listenelements (SegmentNode)
+## Structure of a list element (SegmentNode)
 
-Jedes Element der verketteten Liste enthält folgende Informationen:
+Each element of the linked list contains the following information:
 
 - **index:**  
-  Der fortlaufende Index des Segments (z. B. $0, 1, 2, \dots$).
+  The sequential index of the segment (e.g., $0, 1, 2, \dots$).
 
 - **seg_start:**  
-  Die Startfrequenz des Segments (zum Beispiel $x_{\min} + i \cdot W$).
+  The start frequency of the segment (e.g., $x_{\min} + i \cdot W$).
 
 - **seg_end:**  
-  Die Endfrequenz des Segments (also ${seg\_start} + W$).
+  The end frequency of the segment (i.e., ${seg\_start} + W$).
 
 - **usage_percent:**  
-  Der Prozentsatz der idealen Fläche, der durch die tatsächliche Fläche unter der Spektrumskurve abgedeckt wird. Dies gibt an, wie "voll" das Segment im Vergleich zum Maximum ist.
+  The percentage of the ideal area covered by the actual area under the spectrum curve. This indicates how “full” the segment is compared to the maximum.
 
 - **actual_area:**  
-  Die berechnete Integralfläche unter der Spektrumskurve für das jeweilige Segment.
+  The calculated integral area under the spectrum curve for the respective segment.
 
 - **prev & next:**  
-  Zeiger (Referenzen) auf das vorherige und das nächste Element der Liste. Dies ermöglicht das Durchlaufen der Liste (verkettete Liste).
+  Pointers (references) to the previous and next elements of the list. This allows the list to be traversed (linked list).
 
 
-### Beispielhafte Struktur eines Listenelements
+### Example structure of a list element
 
 ```python
 class SegmentNode:
@@ -618,7 +611,7 @@ class SegmentNode:
 ![Beispielbild: Darstellung einer verketteten Liste](./linkedList3D.png)
 
 
-# Verifikation des Fingerprints ~ Audiofile Analyse
+# Verification of the fingerprint ~ Audio file analysis
 
 
 ```python
@@ -978,83 +971,82 @@ print(f"Vermuteter dynamischer Effekt: {dynamic_info['predicted_dynamic_effect']
 ![png](frequenz_test_files/output2.png)
     
 
-Gewichtete Durchschnittliche Differenz: 4.05% und globaler Durchschnitt (ungewichtetes Mittel): 1.72%
+Weighted average difference: 4.05% and global average (unweighted average): 1.72%
     
-Globaler Audioeffekt basierend auf Nutzungsanteilen der Spektren:
-Gewichtete Durchschnittliche Differenz: 4.05%
-Vermuteter globaler Effekt: Boost im Bassbereich
+Global audio effect based on spectrum usage shares:
+Weighted average difference: 4.05%
+Presumed global effect: Boost in the bass range
 
-80%-Frequenzbereich: 91 Hz bis 758 Hz
+80% frequency range: 91 Hz to 758 Hz
 
-Analyse der dynamischen Kennzahlen:
-Original RMS: 0.0908, Neues RMS: 0.1658, Änderung: 82.55%
-Original Crest-Factor: 4.69, Neuer Crest-Factor: 3.75, Änderung: -20.17%
-Delay-Indikator (Anzahl signifikanter Peaks): 8
-Vermuteter dynamischer Effekt: Kompression (verringerter Dynamikumfang)
-    
+Analysis of dynamic parameters:
+Original RMS: 0.0908, New RMS: 0.1658, Change: 82.55%
+Original Crest Factor: 4.69, New Crest Factor: 3.75, Change: -20.17%
+Delay indicator (number of significant peaks): 8
+Presumed dynamic effect: Compression (reduced dynamic range)
 
-# Audiofile Analyse
 
-In diesem Notebook wird ein Vergleich zwischen zwei Audiofiles durchgeführt – einem Original und einer neuen Version. Dabei kommen verschiedene mathematische Verfahren zum Einsatz, die grob in folgende Bereiche unterteilt werden:
+# Audio file analysis
+
+This notebook compares two audio files – an original and a new version. Various mathematical methods are used, which can be roughly divided into the following areas:
 
 ---
 
-## Integration zur Bestimmung der Energie
+## Integration to determine energy
 
-- **Numerische Integration:**  
-  Innerhalb jedes Frequenzsegments wird das Integral (die Fläche unter der Spektralkurve) berechnet. Hierfür kommt eine Simpson-Regel zum Einsatz, die eine effiziente Methode zur numerischen Approximation von Integralen darstellt.  
-  *Mathematisch:*  
+- **Numerical integration:**
+Within each frequency segment, the integral (the area under the spectral curve) is calculated. A Simpson's rule is used for this, which is an efficient method for the numerical approximation of integrals.
+*Mathematically:*  
   $\int_\approx \int_{f_1}^{f_2} \left| X(f) \right| \, df$
 
-- **Vergleich von Energieanteilen:**  
-  Die berechneten Integrale pro Segment werden relativ zur idealen Boxfläche in Prozent ausgedrückt, was den "Nutzungsanteil" des Frequenzbands quantifiziert.
+- **Comparison of energy shares:**  
+  The calculated integrals per segment are expressed as a percentage relative to the ideal box area, which quantifies the “usage share” of the frequency band.
 
 ---
 
-## Vergleich und Gewichtung der Spektren
+## Comparison and weighting of spectra
 
-- **Abweichungsberechnung:**  
-  Für jedes Segment wird die prozentuale Differenz zwischen den Nutzungsanteilen des Original- und des neuen Audios berechnet:
-  $Abweichung = \left| \frac{Nutzung_{neu} - Nutzung_{orig}}{Boxfläche} \right| \times 100\%$
+- **Deviation calculation:**  
+  For each segment, the percentage difference between the usage shares of the original and new audio is calculated:
+  $Deviation = \left| \frac{Usage_{new} - Usage_{orig}}{Box area} \right| \times 100\%$
 
-- **Klassifizierung der Effekte:**  
-  Basierend auf vorgegebenen Schwellenwerten werden die Abweichungen in unterschiedliche Effekte (z. B. "Boost", "Cut" oder "Neues Audiofile") eingeordnet.
+- **Classification of effects:**
+Based on predefined thresholds, the deviations are classified into different effects (e.g., “boost,” “cut,” or “new audio file”).
 
-- **Gewichtete Durchschnittswerte:**  
-  Die Abweichungen werden zusätzlich gewichtet, wobei Segmente mit höherer Energie (größeres Integral) stärker in den Gesamtdurchschnitt einfließen. Dies liefert eine robustere globale Einschätzung.
+- **Weighted averages:**  
+  The deviations are additionally weighted, with segments with higher energy (larger integral) having a greater influence on the overall average. This provides a more robust global assessment.
 
 ---
 
-## Dynamische Analyse im Zeitbereich
+## Dynamic analysis in the time domain
 
-- **Berechnung von RMS, Peak und Crest-Faktor:**  
-  Neben der Frequenzanalyse wird auch das dynamische Verhalten untersucht.  
-  - **RMS (Root Mean Square):** Gibt den durchschnittlichen Energieinhalt des Signals an.  
+- **Calculation of RMS, peak, and crest factor:**
+In addition to frequency analysis, dynamic behavior is also examined.  
+  - **RMS (Root Mean Square):** Indicates the average energy content of the signal.  
     $RMS = \sqrt{\frac{1}{N}\sum_{n=0}^{N-1} x(n)^2}$
-  - **Peak:** Der maximale Amplitudenwert im Signal.
-  - **Crest-Faktor:** Das Verhältnis von Peak zu RMS, was Rückschlüsse auf die Signalspitzen ermöglicht.
-  
-- **Autokorrelation zur Delay-Erkennung:**  
-  Durch die Berechnung der Autokorrelationsfunktion des Signals werden periodische Muster (möglicherweise Hinweise auf Delay-Effekte) identifiziert.
+- **Peak:** The maximum amplitude value in the signal.
+  - **Crest factor:** The ratio of peak to RMS, which allows conclusions to be drawn about the signal peaks.
 
-- **Vergleich der dynamischen Kennzahlen:**  
-  Veränderungen in diesen Kennzahlen (RMS, Crest, Peaks) zwischen dem Original und dem neuen Audio geben Aufschluss darüber, ob etwaige Effekte wie Kompression, Clipping oder Gain-Veränderungen vorliegen.
+- **Autocorrelation for delay detection:**  
+  By calculating the autocorrelation function of the signal, periodic patterns (possibly indications of delay effects) are identified.
 
+- **Comparison of dynamic metrics:**  
+  Changes in these metrics (RMS, crest, peaks) between the original and the new audio provide information about whether any effects such as compression, clipping, or gain changes are present.
 
 
 ---
 
-## Zusammenfassung
+## Summary
 
-Insgesamt kombiniert der Code:
-- **Spektralanalyse** (Fourier-Transformation und Integration), um den Frequenzinhalt der Audiosignale zu quantifizieren.
-- **Segmentierung** in Frequenzbänder, um lokale Unterschiede im Frequenzspektrum zu erfassen.
-- **Vergleichende Analysen** (gewichtete und ungewichtete Mittelwerte der Abweichungen), um globale Effekte zu identifizieren.
-- **Dynamikanalyse** im Zeitbereich, um Veränderungen in der Signalstärke und -dynamik aufzuspüren.
+Overall, the code combines:
+- **Spectral analysis** (Fourier transform and integration) to quantify the frequency content of the audio signals.
+- **Segmentation** into frequency bands to capture local differences in the frequency spectrum.
+- **Comparative analyses** (weighted and unweighted averages of the deviations) to identify global effects.
+- **Dynamic analysis** in the time domain to detect changes in signal strength and dynamics.
 
-Diese mathematischen Verfahren ermöglichen es, differenziert zu bestimmen, wie sich das neue Audio im Vergleich zum Original verhält – sei es durch EQ-Anpassungen (Boost/Cut) oder durch dynamische Veränderungen (z. B. Kompression oder Verzerrung).
+These mathematical methods make it possible to determine in a differentiated manner how the new audio behaves in comparison to the original – whether through EQ adjustments (boost/cut) or dynamic changes (e.g., compression or distortion).
 
-# Vergleiche zwei Audiofiles anhand von Fingerprints.
+# Compare two audio files using fingerprints.
 
 
 ```python
@@ -1292,70 +1284,70 @@ if __name__ == "__main__":
     
 
 
-# Skalierung in der Fingerprint-Analyse: Lokale vs. Einheitliche (Globale) Skalierung
+# Scaling in fingerprint analysis: Local vs. uniform (global) scaling
 
-In diesem Codeabschnitt wird der Frequenzbereich eines Audiosignals in eine festgelegte Anzahl von Segmenten unterteilt, um aus jedem Segment den "Flächenverbrauch" (das Integral des Spektrums) zu berechnen. Dabei erfolgt die Normierung (Skalierung) der Messergebnisse – sprich die Berechnung der idealen Bezugsfläche – auf zwei alternative Arten. Diese Entscheidung über die Skalierung hat wesentliche Vor- und Nachteile:
-
----
-
-## Lokale Skalierung
-
-**Beschreibung:**  
-- **Berechnung:**  
-  Bei der lokalen Skalierung wird für jedes Audiofile separat der maximale Amplitudenwert des Spektrums berechnet.  
-- **Normierungsbasis:**  
-  Daraus wird die ideale Fläche pro Segment (Segmentbreite × lokaler Maximalwert) ermittelt, an der sich der tatsächliche Flächenverbrauch orientiert.  
-- **Verfahren:**  
-  Jeder Fingerabdruck (d.h. das Spektrum in Segmenten) wird somit relativ zur eigenen Dynamik des jeweiligen Audiofiles normalisiert.
-
-**Vorteile:**  
-- **Robustheit gegenüber Gain-Änderungen:**  
-  Änderungen der Lautstärke oder Gain-Anpassungen innerhalb eines Audiofiles verändern die internen Verhältnisse nicht, da jede Datei ihre eigene Normierungsbasis hat.
-- **Dynamik-Erfassung:**  
-  Die interne Dynamik des Audios wird gut abgebildet, da die Skalierung an den individuellen Maximalwert gekoppelt ist.
-
-**Nachteile:**  
-- **Vergleichbarkeit:**  
-  Da jede Datei unabhängig normiert wird, wird der direkte Vergleich zwischen unterschiedlichen Audiofiles erschwert.  
-- **Manipulationsnachweis:**  
-  Veränderungen, die in den relativen Werten auftreten, könnten teils auch auf unterschiedliche Dynamiken zurückzuführen sein und nicht nur auf inhaltliche Veränderungen.
+In this section of code, the frequency range of an audio signal is divided into a fixed number of segments in order to calculate the “area consumption” (the integral of the spectrum) from each segment. The measurement results are normalized (scaled) – i.e., the ideal reference area is calculated – in two alternative ways. This scaling decision has significant advantages and disadvantages:
 
 ---
 
-## Einheitliche Skalierung
+## Local scaling
 
-**Beschreibung:**  
-- **Berechnung:**  
-  Hier wird ein globaler Maximalwert (global_max_amp) verwendet, der aus mehreren Audiofiles (z. B. dem Original und dem Vergleich) bestimmt wird.  
-- **Normierungsbasis:**  
-  Mit diesem festen Bezugswert wird die ideale Fläche für alle Dateien einheitlich berechnet.
-- **Verfahren:**  
-  Beide Fingerabdrücke werden auf dieselbe Referenz skaliert, was einen direkten, absoluten Vergleich ermöglicht.
+**Description:**
+- **Calculation:**
+In local scaling, the maximum amplitude value of the spectrum is calculated separately for each audio file.
+- **Normalization basis:**
+This is used to determine the ideal area per segment (segment width × local maximum value), which is used as a basis for the actual area consumption.  
+- **Method:**  
+  Each fingerprint (i.e., the spectrum in segments) is thus normalized relative to the dynamics of the respective audio file.
 
-**Vorteile:**  
-- **Direkter Vergleich:**  
-  Da alle Dateien anhand des gleichen Bezugswerts normiert werden, lassen sich Veränderungen und Manipulationen eindeutig zuordnen.
-- **Langfristige Vergleichbarkeit:**  
-  Bei Überwachung oder Archivierung ist es einfacher, langfristig Veränderungen im spektralen Flächenverbrauch nachzuverfolgen, da die Normierungsgrundlage konstant bleibt.
+**Advantages:**  
+- **Robustness against gain changes:**  
+  Changes in volume or gain adjustments within an audio file do not alter the internal ratios, as each file has its own normalization basis.
+- **Dynamic range capture:**  
+  The internal dynamics of the audio are well represented, as the scaling is linked to the individual maximum value.
 
-**Nachteile:**  
-- **Verlust individueller Dynamik:**  
-  Ein global festgelegter Maximalwert kann dazu führen, dass die interne Dynamik eines einzelnen Audiofiles nicht mehr adäquat abgebildet wird – besonders, wenn ein File deutlich leichtere oder lautere Bereiche aufweist.
-- **Einfluss von Ausreißern:**  
-  Extremwerte in einem der verglichenen Audiofiles können den globalen Maximalwert verzerren, sodass die relativen Nutzungsanteile in den anderen Dateien verzerrt erscheinen.
+**Disadvantages:**  
+- **Comparability:**  
+  Since each file is normalized independently, direct comparison between different audio files is difficult.  
+- **Evidence of manipulation:**  
+  Changes that occur in the relative values could also be due in part to different dynamics and not only to changes in content.
 
 ---
 
-## Zusammenfassung
+## Uniform scaling
 
-Die Wahl zwischen lokaler und einheitlicher Skalierung hängt stark vom Anwendungsfall ab:
+**Description:**
+- **Calculation:**
+A global maximum value (global_max_amp) is used here, which is determined from several audio files (e.g., the original and the comparison).  
+- **Normalization basis:**  
+  This fixed reference value is used to calculate the ideal area for all files uniformly.
+- **Method:**  
+  Both fingerprints are scaled to the same reference, which enables a direct, absolute comparison.
 
-- **Lokale Skalierung** eignet sich, wenn der Fokus auf der internen Dynamik und der Robustheit gegenüber Gain-Änderungen liegt.  
-- **Einheitliche Skalierung** bietet sich an, wenn ein klarer, direkter Vergleich zwischen verschiedenen Audiofiles benötigt wird und Manipulationen über den Zeitverlauf nachgewiesen werden sollen.
+**Advantages:**
+- **Direct comparison:**  
+  Since all files are normalized using the same reference value, changes and manipulations can be clearly identified.
+- **Long-term comparability:**  
+  For monitoring or archiving purposes, it is easier to track long-term changes in spectral area usage because the normalization basis remains constant.
 
-Beide Methoden haben ihre Vor- und Nachteile, die sorgfältig im Kontext der Analyseziele abgewogen werden müssen.
+**Disadvantages:**  
+- **Loss of individual dynamics:**  
+  A globally defined maximum value can result in the internal dynamics of an individual audio file no longer being adequately represented – especially if a file has significantly quieter or louder sections.
+- **Influence of outliers:**  
+  Extreme values in one of the compared audio files can distort the global maximum value, so that the relative usage shares in the other files appear distorted.
 
-# Zwei fingerprints werden eingelesen und verglichen
+---
+
+## Summary
+
+The choice between local and uniform scaling depends heavily on the use case:
+
+- **Local scaling** is suitable when the focus is on internal dynamics and robustness against gain changes.
+- **Uniform scaling** is useful when a clear, direct comparison between different audio files is required and manipulations over time need to be detected.
+
+Both methods have their advantages and disadvantages, which must be carefully weighed in the context of the analysis objectives.
+
+# Two fingerprints are read and compared
 
 
 ```python
